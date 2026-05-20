@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch App (com.activitymonitor)",
+      "request": "launch",
+      "mainClass": "com.activitymonitor.App",
+      "projectName": "simpoka",
+      "classPaths": [
+        "${workspaceFolder}/bin"
+      ]
+    }
+  ]
+}
