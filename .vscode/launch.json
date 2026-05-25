@@ -3,13 +3,18 @@
   "configurations": [
     {
       "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "com.activitymonitor.App",
+      "projectName": "simpoka_cf852318"
+    },
+    {
+      "type": "java",
       "name": "Launch App (com.activitymonitor)",
       "request": "launch",
       "mainClass": "com.activitymonitor.App",
       "projectName": "simpoka",
-      "classPaths": [
-        "${workspaceFolder}/bin"
-      ]
+      "classPaths": ["${workspaceFolder}/bin"]
     }
   ]
 }

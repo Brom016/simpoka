@@ -6,13 +6,24 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URL      = "jdbc:mysql://localhost:3306/activity_monitor";
-    private static final String USER     = "root";
-    private static final String PASSWORD = "123";
+    private static final String URL = "jdbc:mysql://localhost:3306/activity_monitor";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     private static Connection connection = null;
 
     public static Connection getConnection() {
+        // Jika koneksi pernah ditutup, paksa buat koneksi baru.
+        if (connection != null) {
+            try {
+                if (connection.isClosed()) {
+                    connection = null;
+                }
+            } catch (SQLException ignored) {
+                connection = null;
+            }
+        }
+
         if (connection == null) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
