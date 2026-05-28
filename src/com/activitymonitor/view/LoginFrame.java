@@ -2,10 +2,6 @@ package com.activitymonitor.view;
 
 // Mengimpor library Swing untuk membuat GUI
 // Mengimpor library AWT untuk warna, font, layout, dll
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
 
 // Class utama
 public class LoginFrame extends JFrame {
@@ -74,12 +70,12 @@ public class LoginFrame extends JFrame {
         // Username field
         JLabel usernameLabel = new JLabel("Username");
         usernameLabel.setFont(FONT_LABEL);
-        usernameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
  
         usernameField = new JTextField();
         usernameField.setFont(FONT_FIELD);
-        usernameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
-        usernameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usernameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, usernameLabel.getPreferredSize().height + 12));
+        usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
         usernameField.setBorder(new CompoundBorder(
             new LineBorder(new Color(200, 200, 200), 1, true),
             new EmptyBorder(4, 10, 4, 10)
@@ -88,11 +84,11 @@ public class LoginFrame extends JFrame {
         // Password field
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setFont(FONT_LABEL);
-        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
  
         passwordField = new JPasswordField();
         passwordField.setFont(FONT_FIELD);
-        passwordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+        passwordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, passwordLabel.getPreferredSize().height + 12));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
         passwordField.setBorder(new CompoundBorder(
             new LineBorder(new Color(200, 200, 200), 1, true),
@@ -189,12 +185,6 @@ public class LoginFrame extends JFrame {
     }
     
 
-    //testing
-    public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
-        LoginFrame frame = new LoginFrame();
-        frame.setVisible(true);
-    });
-}
+
 
 }
