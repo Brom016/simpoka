@@ -1,98 +1,45 @@
 package com.activitymonitor.dao;
 
+import com.activitymonitor.model.Organization;
 import com.activitymonitor.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrganizationDAO {
 
-    public static class OrganizationRow {
-        private int id;
-        private String name;
-        private String leader;
-        private String period;
-
-        public int getId() {
-            return id;
+    public Organization findById(int id) {
+        String sql = "SELECT * FROM organizations WHERE id = ?";
+        try (PreparedStatement stmt = DBConnection.getConnection()
+                .prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return mapRow(rs);
+        } catch (SQLException e) {
+            System.err.println("OrganizationDAO.findById: " + e.getMessage());
         }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getLeader() {
-            return leader;
-        }
-
-        public void setLeader(String leader) {
-            this.leader = leader;
-        }
-
-        public String getPeriod() {
-            return period;
-        }
-
-        public void setPeriod(String period) {
-            this.period = period;
-        }
+        return null;
     }
 
-    public List<OrganizationRow> getAllOrganizations() {
-        List<OrganizationRow> list = new ArrayList<>();
-        String query = "SELECT id, name, leader, period FROM organizations ORDER BY id";
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query);
-                ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                OrganizationRow org = new OrganizationRow();
-                org.setId(rs.getInt("id"));
-                org.setName(rs.getString("name"));
-                org.setLeader(rs.getString("leader"));
-                org.setPeriod(rs.getString("period"));
-                list.add(org);
-            }
+    public List<Organization> findAll() {
+        List<Organization> list = new ArrayList<>();
+        String sql = "SELECT * FROM organizations ORDER BY name ASC";
+        try (Statement stmt = DBConnection.getConnection().createStatement();
+             ResultSet rs   = stmt.executeQuery(sql)) {
+            while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("OrganizationDAO.findAll: " + e.getMessage());
         }
-
         return list;
     }
 
-    public OrganizationRow findById(int id) {
-        String query = "SELECT id, name, leader, period FROM organizations WHERE id = ? LIMIT 1";
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)) {
-
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    OrganizationRow org = new OrganizationRow();
-                    org.setId(rs.getInt("id"));
-                    org.setName(rs.getString("name"));
-                    org.setLeader(rs.getString("leader"));
-                    org.setPeriod(rs.getString("period"));
-                    return org;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    private Organization mapRow(ResultSet rs) throws SQLException {
+        return new Organization(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getString("leader"),
+            rs.getString("period")
+        );
     }
 }
