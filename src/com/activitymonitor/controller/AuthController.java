@@ -3,43 +3,61 @@ package com.activitymonitor.controller;
 import com.activitymonitor.dao.UserDAO;
 import com.activitymonitor.model.User;
 import com.activitymonitor.util.SessionManager;
+import com.activitymonitor.view.DashboardFrame;
+import com.activitymonitor.view.LoginFrame;
 
 public class AuthController {
 
-    private final UserDAO userDAO;
+    private final LoginFrame loginFrame;
+    private final UserDAO    userDAO;
 
-    public AuthController() {
-        this.userDAO = new UserDAO();
+    public AuthController(LoginFrame loginFrame) {
+        this.loginFrame = loginFrame;
+        this.userDAO    = new UserDAO();
+        bindEvents();
     }
 
-    // Untuk UI/login: panggil metode ini dengan username & password.
-    // Jika sukses, current user disimpan ke SessionManager.
-    public boolean login(String username, String password) {
-        if (username == null || username.trim().isEmpty()) {
-            return false;
-        }
-        if (password == null) {
-            return false;
-        }
-
-        // authenticate() hanya return boolean.
-        boolean ok = userDAO.authenticate(username.trim(), password);
-        if (!ok) {
-            SessionManager.clear();
-            return false;
-        }
-
-        // Ambil user lengkap agar bisa dipakai di Dashboard.
-        User u = userDAO.findByUsername(username.trim());
-        SessionManager.setCurrentUser(u);
-        return u != null;
+    private void bindEvents() {
+        loginFrame.addLoginListener(e -> handleLogin());
     }
 
-    public void logout() {
-        SessionManager.clear();
-    }
+    private void handleLogin() {
+        String username = loginFrame.getUsername();
+        String password = loginFrame.getPassword();
 
-    public User getCurrentUser() {
-        return SessionManager.getCurrentUser();
+        if (username.isEmpty() || password.isEmpty()) {
+            loginFrame.showError("Username dan password wajib diisi.");
+            return;
+        }
+
+        loginFrame.setLoginEnabled(false);
+        loginFrame.clearError();
+
+        User user = userDAO.authenticate(username, password);
+
+        if (user == null) {
+            loginFrame.showError("Username atau password salah.");
+            loginFrame.setLoginEnabled(true);
+            return;
+        }
+
+        // Set session
+        SessionManager.getInstance().setCurrentUser(user);
+
+        // Open dashboard
+        DashboardFrame dashboard = new DashboardFrame();
+        dashboard.setUserInfo(user.getFullName(), user.getRole());
+
+        new ActivityController(dashboard, user);
+
+        dashboard.addLogoutListener(ev -> {
+            SessionManager.getInstance().clear();
+            dashboard.dispose();
+            loginFrame.setLoginEnabled(true);
+            loginFrame.setVisible(true);
+        });
+
+        loginFrame.setVisible(false);
+        dashboard.setVisible(true);
     }
 }

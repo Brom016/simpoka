@@ -3,21 +3,36 @@ package com.activitymonitor.util;
 import com.activitymonitor.model.User;
 
 public class SessionManager {
-    private static User currentUser;
 
-    public static void setCurrentUser(User user) {
-        currentUser = user;
+    private static SessionManager instance;
+    private User currentUser;
+
+    private SessionManager() {}
+
+    public static SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager();
+        }
+        return instance;
     }
 
-    public static User getCurrentUser() {
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    public User getCurrentUser() {
         return currentUser;
     }
 
-    public static boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return currentUser != null;
     }
 
-    public static void clear() {
+    public boolean isAdmin() {
+        return currentUser != null && currentUser.getRole().equals("admin");
+    }
+
+    public void clear() {
         currentUser = null;
     }
 }
