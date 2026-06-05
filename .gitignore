@@ -1,6 +1,6 @@
-bin/
-*.class
-output/
-.vscode/
+database.properties
 .env
+bin/
+output/
+*.class
 konteks.md

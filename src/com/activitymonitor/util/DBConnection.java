@@ -1,39 +1,64 @@
 package com.activitymonitor.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://31.97.187.183:3306/bromoweb_simpoka";
-    private static final String USER = "bromoweb_kelompok7";
-    private static final String PASSWORD = "bromo!FJNeAx/;]4zevwu;3D.d):3Cm%0Fy7a";
-
-
     private static Connection connection = null;
 
-    public static Connection getConnection() {
-        // Jika koneksi pernah ditutup, paksa buat koneksi baru.
-        if (connection != null) {
-            try {
-                if (connection.isClosed()) {
-                    connection = null;
+    private static String DB_URL;
+    private static String DB_USER;
+    private static String DB_PASSWORD;
+
+    static {
+        loadConfig();
+    }
+
+    private static void loadConfig() {
+        Properties props = new Properties();
+
+        // Coba baca dari file di root project dulu
+        try (InputStream fileStream =
+                new FileInputStream("database.properties")) {
+            props.load(fileStream);
+
+        } catch (IOException e1) {
+            // Fallback: baca dari classpath (dalam jar)
+            try (InputStream cpStream =
+                    DBConnection.class.getClassLoader()
+                        .getResourceAsStream("database.properties")) {
+                if (cpStream != null) {
+                    props.load(cpStream);
+                } else {
+                    System.err.println("[DBConnection] database.properties tidak ditemukan.");
+                    System.err.println("Buat file database.properties di root folder project.");
                 }
-            } catch (SQLException ignored) {
-                connection = null;
+            } catch (IOException e2) {
+                System.err.println("[DBConnection] Gagal membaca config: " + e2.getMessage());
             }
         }
 
+        DB_URL      = props.getProperty("DB_URL",      "jdbc:mysql://localhost:3306/activity_monitor");
+        DB_USER     = props.getProperty("DB_USER",     "root");
+        DB_PASSWORD = props.getProperty("DB_PASSWORD", "");
+    }
+
+    public static Connection getConnection() {
         if (connection == null) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Koneksi database berhasil.");
+                connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                System.out.println("[DBConnection] Koneksi berhasil.");
             } catch (ClassNotFoundException e) {
-                System.err.println("Driver tidak ditemukan: " + e.getMessage());
+                System.err.println("[DBConnection] Driver tidak ditemukan: " + e.getMessage());
             } catch (SQLException e) {
-                System.err.println("Koneksi gagal: " + e.getMessage());
+                System.err.println("[DBConnection] Koneksi gagal: " + e.getMessage());
             }
         }
         return connection;
@@ -44,9 +69,9 @@ public class DBConnection {
             try {
                 connection.close();
                 connection = null;
-                System.out.println("Koneksi ditutup.");
+                System.out.println("[DBConnection] Koneksi ditutup.");
             } catch (SQLException e) {
-                System.err.println("Gagal menutup koneksi: " + e.getMessage());
+                System.err.println("[DBConnection] Gagal menutup koneksi: " + e.getMessage());
             }
         }
     }
