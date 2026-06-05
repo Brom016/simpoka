@@ -1,6 +1,10 @@
 package com.activitymonitor.view;
 
-// Mengimpor library Swing untuk membuat GUI
+// Mengimpor library Swing untuk membuat GUI]
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 // Mengimpor library AWT untuk warna, font, layout, dll
 
 // Class utama

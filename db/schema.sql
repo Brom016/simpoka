@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS activity_monitor
+CREATE DATABASE IF NOT EXISTS bromoweb_simpoka
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE activity_monitor;
+USE bromoweb_simpoka;
 
 CREATE TABLE organizations (
   id INT NOT NULL AUTO_INCREMENT,

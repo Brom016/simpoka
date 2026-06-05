@@ -1,9 +1,9 @@
 package com.activitymonitor.view;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 public class ActivityFormPanel extends JDialog {
 
@@ -212,7 +212,7 @@ public class ActivityFormPanel extends JDialog {
     public String getActivityName()    { return nameField.getText().trim(); }
     public String getDescription()     { return descriptionArea.getText().trim(); }
     public String getDate()            { return dateField.getText().trim(); }
-    public String getLocation()        { return locationField.getText().trim(); }
+    public String getActivityLocation()        { return locationField.getText().trim(); }
     public String getParticipantCount(){ return participantField.getText().trim(); }
     public String getStatus()          {
         return statusCombo.getSelectedItem().toString();
@@ -245,7 +245,7 @@ public class ActivityFormPanel extends JDialog {
             dateField.requestFocus();
             return false;
         }
-        if (getLocation().isEmpty()) {
+        if (getActivityLocation().isEmpty()) {
             if (errorTarget != null) errorTarget.setText("Lokasi wajib diisi.");
             locationField.requestFocus();
             return false;

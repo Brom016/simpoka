@@ -1,3 +1,4 @@
+//rename to DBConnection.java
 package com.activitymonitor.util;
 
 import java.sql.Connection;
@@ -6,10 +7,9 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://31.97.187.183:3306/bromoweb_simpoka";
-    private static final String USER = "bromoweb_kelompok7";
-    private static final String PASSWORD = "bromo!FJNeAx/;]4zevwu;3D.d):3Cm%0Fy7a";
-
+    private static final String URL = "jdbc:mysql://localhost:3306/activity_monitor";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     private static Connection connection = null;
 

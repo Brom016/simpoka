@@ -4,6 +4,7 @@ import com.activitymonitor.model.Activity;
 import com.activitymonitor.model.Organization;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;

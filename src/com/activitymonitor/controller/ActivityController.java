@@ -10,10 +10,9 @@ import com.activitymonitor.util.PDFExporter;
 import com.activitymonitor.view.ActivityFormPanel;
 import com.activitymonitor.view.ActivityTablePanel;
 import com.activitymonitor.view.DashboardFrame;
-
-import javax.swing.*;
 import java.sql.Date;
 import java.util.List;
+import javax.swing.*;
 
 public class ActivityController {
 
@@ -85,7 +84,7 @@ public class ActivityController {
         form.addSaveListener(e -> {
             String error = InputValidator.validateActivity(
                 form.getActivityName(), form.getDate(),
-                form.getLocation(), form.getParticipantCount()
+                form.getActivityLocation(), form.getParticipantCount()
             );
             if (error != null) {
                 JOptionPane.showMessageDialog(form, error,
@@ -133,7 +132,7 @@ public class ActivityController {
         form.addSaveListener(e -> {
             String error = InputValidator.validateActivity(
                 form.getActivityName(), form.getDate(),
-                form.getLocation(), form.getParticipantCount()
+                form.getActivityLocation(), form.getParticipantCount()
             );
             if (error != null) {
                 JOptionPane.showMessageDialog(form, error,
@@ -224,7 +223,7 @@ public class ActivityController {
             form.getActivityName(),
             form.getDescription(),
             Date.valueOf(form.getDate()),
-            form.getLocation(),
+            form.getActivityLocation(),
             count,
             form.getStatus(),
             currentUser.getId(),
