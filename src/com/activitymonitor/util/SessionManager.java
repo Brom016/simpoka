@@ -29,7 +29,12 @@ public class SessionManager {
     }
 
     public boolean isAdmin() {
-        return currentUser != null && currentUser.getRole().equals("admin");
+        if (currentUser == null || currentUser.getRole() == null) return false;
+        String role = currentUser.getRole().toLowerCase();
+        return role.equals("admin")
+            || role.equals("admin_utama")
+            || role.equals("super_admin")
+            || role.equals("main_admin");
     }
 
     public void clear() {

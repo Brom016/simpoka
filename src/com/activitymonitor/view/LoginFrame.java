@@ -1,9 +1,8 @@
 package com.activitymonitor.view;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class LoginFrame extends JFrame {
 
@@ -20,7 +19,7 @@ public class LoginFrame extends JFrame {
     private void setupFrame() {
         setTitle("Activity Monitor — Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(440, 520);
+        setSize(460, 540);
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setBackground(UIConstants.BG);
@@ -33,8 +32,8 @@ public class LoginFrame extends JFrame {
         UIConstants.RoundedPanel card = new UIConstants.RoundedPanel(12);
         card.setBackground(Color.WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createEmptyBorder(40, 40, 36, 40));
-        card.setPreferredSize(new Dimension(360, 440));
+        card.setBorder(BorderFactory.createEmptyBorder(42, 44, 36, 44));
+        card.setPreferredSize(new Dimension(380, 450));
 
         JLabel title = new JLabel("Activity Monitor");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
@@ -54,15 +53,18 @@ public class LoginFrame extends JFrame {
         JLabel userLabel = new JLabel("Username");
         userLabel.setFont(UIConstants.F_LABEL);
         userLabel.setForeground(UIConstants.TEXT);
-        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        userLabel.setMaximumSize(new Dimension(292, 20));
 
         JPanel userWrap = buildFieldWrap();
-        userWrap.setAlignmentX(Component.LEFT_ALIGNMENT);
-        userWrap.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        userWrap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        userWrap.setMaximumSize(new Dimension(292, 40));
+        userWrap.setPreferredSize(new Dimension(292, 40));
         JLabel userIcon = new JLabel("  \u25A1 ");
         userIcon.setForeground(UIConstants.TEXT_LIGHT);
         usernameField = new JTextField();
         usernameField.setFont(UIConstants.F_BODY);
+        usernameField.setHorizontalAlignment(JTextField.LEFT);
         usernameField.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 10));
         usernameField.setBackground(Color.WHITE);
         userWrap.add(userIcon, BorderLayout.WEST);
@@ -72,15 +74,18 @@ public class LoginFrame extends JFrame {
         JLabel passLabel = new JLabel("Password");
         passLabel.setFont(UIConstants.F_LABEL);
         passLabel.setForeground(UIConstants.TEXT);
-        passLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passLabel.setMaximumSize(new Dimension(292, 20));
 
         JPanel passWrap = buildFieldWrap();
-        passWrap.setAlignmentX(Component.LEFT_ALIGNMENT);
-        passWrap.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        passWrap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passWrap.setMaximumSize(new Dimension(292, 40));
+        passWrap.setPreferredSize(new Dimension(292, 40));
         JLabel passIcon = new JLabel("  \u25CB ");
         passIcon.setForeground(UIConstants.TEXT_LIGHT);
         passwordField = new JPasswordField();
         passwordField.setFont(UIConstants.F_BODY);
+        passwordField.setHorizontalAlignment(JTextField.LEFT);
         passwordField.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 4));
         passwordField.setBackground(Color.WHITE);
         JButton toggle = new JButton("\u25CE");
@@ -91,7 +96,7 @@ public class LoginFrame extends JFrame {
         toggle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
         toggle.addActionListener(e ->
             passwordField.setEchoChar(
-                passwordField.getEchoChar() == 0 ? 'u2022' : (char) 0));
+                passwordField.getEchoChar() == 0 ? '\u2022' : (char) 0));
         passWrap.add(passIcon,      BorderLayout.WEST);
         passWrap.add(passwordField, BorderLayout.CENTER);
         passWrap.add(toggle,        BorderLayout.EAST);
@@ -100,12 +105,13 @@ public class LoginFrame extends JFrame {
         errorLabel = new JLabel(" ");
         errorLabel.setFont(UIConstants.F_SMALL);
         errorLabel.setForeground(new Color(220, 53, 69));
-        errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setMaximumSize(new Dimension(292, 18));
 
         // Button
         loginButton = UIConstants.primaryButton("Masuk");
-        loginButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
-        loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        loginButton.setMaximumSize(new Dimension(292, 42));
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         // Footer

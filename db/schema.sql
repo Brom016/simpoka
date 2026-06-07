@@ -19,7 +19,7 @@ CREATE TABLE users (
   full_name VARCHAR(100) NOT NULL,
   username VARCHAR(50) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  role ENUM('admin', 'member') NOT NULL DEFAULT 'member',
+  role ENUM('admin_utama', 'admin', 'member') NOT NULL DEFAULT 'member',
   organization_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -69,7 +69,7 @@ INSERT INTO organizations (name, leader, period) VALUES
 ('Badan Eksekutif Mahasiswa Fakultas', 'Sulastri', '2025/2026');
 
 INSERT INTO users (full_name, username, password, role, organization_id) VALUES
-('Bromo', 'bromo.admin', 'admin123', 'admin', 1),
+('Bromo', 'bromo.admin', 'admin123', 'admin_utama', 1),
 ('Siti Rahayu', 'siti.member', 'member123', 'member', 1),
 
 ('Nabila Septina Rahmajanti', 'nabila.admin', 'admin123', 'admin', 2),

@@ -46,7 +46,9 @@ public class AuthController {
 
         // Open dashboard
         DashboardFrame dashboard = new DashboardFrame();
-        dashboard.setUserInfo(user.getFullName(), user.getRole());
+        dashboard.setUserInfo(user.getFullName(),
+            user.getUsername().equalsIgnoreCase("bromo.admin")
+                ? "admin_utama" : user.getRole());
 
         new ActivityController(dashboard, user);
 
