@@ -1,9 +1,9 @@
 package com.activitymonitor.view;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 public class ActivityFormPanel extends JDialog {
 

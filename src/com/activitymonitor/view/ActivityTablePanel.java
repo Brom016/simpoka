@@ -71,8 +71,6 @@ public class ActivityTablePanel extends JPanel {
         addButton    = UIConstants.primaryButton("+ Tambah Kegiatan");
 
         btns.add(exportButton);
-        btns.add(editButton);
-        btns.add(deleteButton);
         btns.add(addButton);
 
         bar.add(searchWrap, BorderLayout.WEST);
@@ -286,11 +284,9 @@ public class ActivityTablePanel extends JPanel {
     public void addAddListener(ActionListener l)    { addButton.addActionListener(l); }
     public void addEditListener(ActionListener l) {
         this.onEdit = l;
-        editButton.addActionListener(l);
     }
     public void addDeleteListener(ActionListener l) {
         this.onDelete = l;
-        deleteButton.addActionListener(l);
     }
     public void addExportListener(ActionListener l) { exportButton.addActionListener(l); }
     public void addTableSelectionListener(
@@ -301,8 +297,6 @@ public class ActivityTablePanel extends JPanel {
     public void setCrudEnabled(boolean enabled) {
         crudEnabled = enabled;
         addButton.setVisible(enabled);
-        editButton.setVisible(enabled);
-        deleteButton.setVisible(enabled);
         table.getColumnModel().getColumn(6).setMinWidth(enabled ? 46 : 0);
         table.getColumnModel().getColumn(6).setMaxWidth(enabled ? 50 : 0);
         table.getColumnModel().getColumn(6).setPreferredWidth(enabled ? 46 : 0);
