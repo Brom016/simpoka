@@ -44,6 +44,18 @@ public class ActivityDAO {
         return list;
     }
 
+    public List<Activity> findAll() {
+        List<Activity> list = new ArrayList<>();
+        String sql = "SELECT * FROM activities ORDER BY date DESC";
+        try (Statement stmt = DBConnection.getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.err.println("ActivityDAO.findAllGlobal: " + e.getMessage());
+        }
+        return list;
+    }
+
     public Activity findById(int id) {
         String sql = "SELECT * FROM activities WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -70,6 +82,22 @@ public class ActivityDAO {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
             System.err.println("ActivityDAO.findByKeyword: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Activity> findByKeyword(String keyword) {
+        List<Activity> list = new ArrayList<>();
+        String sql = "SELECT * FROM activities "
+                   + "WHERE name LIKE ? "
+                   + "ORDER BY date DESC";
+        try (PreparedStatement stmt = DBConnection.getConnection()
+                .prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.err.println("ActivityDAO.findByKeywordGlobal: " + e.getMessage());
         }
         return list;
     }

@@ -1,198 +1,174 @@
 package com.activitymonitor.view;
 
-// Mengimpor library Swing untuk membuat GUI]
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-// Mengimpor library AWT untuk warna, font, layout, dll
 
-// Class utama
 public class LoginFrame extends JFrame {
 
-    private JTextField usernameField;
+    private JTextField     usernameField;
     private JPasswordField passwordField;
-    private JButton loginButton;
-    private JLabel errorLabel;
+    private JButton        loginButton;
+    private JLabel         errorLabel;
 
-    private static final Color COLOR_PRIMARY    = new Color(0, 128, 128);
-    private static final Color COLOR_BG         = new Color(240, 244, 245);
-    private static final Color COLOR_CARD       = Color.WHITE;
-    private static final Color COLOR_ERROR      = new Color(200, 50, 50);
-    private static final Font  FONT_TITLE       = new Font("Segoe UI", Font.BOLD, 22);
-    private static final Font  FONT_SUBTITLE    = new Font("Segoe UI", Font.PLAIN, 12);
-    private static final Font  FONT_LABEL       = new Font("Segoe UI", Font.PLAIN, 13);
-    private static final Font  FONT_FIELD       = new Font("Segoe UI", Font.PLAIN, 13);
-    private static final Font  FONT_BUTTON      = new Font("Segoe UI", Font.BOLD, 13);
-    
     public LoginFrame() {
         initComponents();
         setupFrame();
     }
 
     private void setupFrame() {
-        setTitle("SIMPOKA - Login");
+        setTitle("Activity Monitor — Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(420, 480);
+        setSize(460, 540);
         setLocationRelativeTo(null);
         setResizable(false);
+        getContentPane().setBackground(UIConstants.BG);
     }
 
     private void initComponents() {
-        //background panel
-        JPanel background = new JPanel(new GridBagLayout());
-        background.setBackground(COLOR_BG);
+        setLayout(new GridBagLayout());
+        getContentPane().setBackground(UIConstants.BG);
 
-        //card panel
-        JPanel card = new JPanel();
+        UIConstants.RoundedPanel card = new UIConstants.RoundedPanel(12);
+        card.setBackground(Color.WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(COLOR_CARD);
-        card.setBorder(new CompoundBorder(
-            new LineBorder(new Color(220, 220, 220), 1, true),
-            new EmptyBorder(40, 40, 40, 40)
-        ));
+        card.setBorder(BorderFactory.createEmptyBorder(42, 44, 36, 44));
+        card.setPreferredSize(new Dimension(380, 450));
 
-        card.setPreferredSize(new Dimension(360,440));
-
-        //title
-        JLabel title = new JLabel("SIMPOKA");
-        title.setFont(FONT_TITLE);
+        JLabel title = new JLabel("Activity Monitor");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setForeground(UIConstants.PRIMARY);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setForeground(COLOR_PRIMARY);
 
-        //subtitle
-        JLabel subtitle = new JLabel("Sistem Pelaporan Kegiatan Mahasiswa");
-        subtitle.setFont(FONT_SUBTITLE);
+        JLabel subtitle = new JLabel("Sistem Monitoring Kegiatan Organisasi");
+        subtitle.setFont(UIConstants.F_SUBTITLE);
+        subtitle.setForeground(UIConstants.TEXT_MUTED);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        subtitle.setForeground(new Color(120, 120, 120));
 
-        //separator
-        JSeparator separator = new JSeparator();
-        separator.setForeground(new Color(220, 220, 220));
-        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        JSeparator sep = new JSeparator();
+        sep.setForeground(UIConstants.BORDER);
+        sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
 
-        // Username field
-        JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(FONT_LABEL);
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
- 
+        // Username
+        JLabel userLabel = new JLabel("Username");
+        userLabel.setFont(UIConstants.F_LABEL);
+        userLabel.setForeground(UIConstants.TEXT);
+        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        userLabel.setMaximumSize(new Dimension(292, 20));
+
+        JPanel userWrap = buildFieldWrap();
+        userWrap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        userWrap.setMaximumSize(new Dimension(292, 40));
+        userWrap.setPreferredSize(new Dimension(292, 40));
+        JLabel userIcon = new JLabel("  \u25A1 ");
+        userIcon.setForeground(UIConstants.TEXT_LIGHT);
         usernameField = new JTextField();
-        usernameField.setFont(FONT_FIELD);
-        usernameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, usernameLabel.getPreferredSize().height + 12));
-        usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        usernameField.setBorder(new CompoundBorder(
-            new LineBorder(new Color(200, 200, 200), 1, true),
-            new EmptyBorder(4, 10, 4, 10)
-        ));
- 
-        // Password field
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(FONT_LABEL);
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
- 
+        usernameField.setFont(UIConstants.F_BODY);
+        usernameField.setHorizontalAlignment(JTextField.LEFT);
+        usernameField.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 10));
+        usernameField.setBackground(Color.WHITE);
+        userWrap.add(userIcon, BorderLayout.WEST);
+        userWrap.add(usernameField, BorderLayout.CENTER);
+
+        // Password
+        JLabel passLabel = new JLabel("Password");
+        passLabel.setFont(UIConstants.F_LABEL);
+        passLabel.setForeground(UIConstants.TEXT);
+        passLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passLabel.setMaximumSize(new Dimension(292, 20));
+
+        JPanel passWrap = buildFieldWrap();
+        passWrap.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passWrap.setMaximumSize(new Dimension(292, 40));
+        passWrap.setPreferredSize(new Dimension(292, 40));
+        JLabel passIcon = new JLabel("  \u25CB ");
+        passIcon.setForeground(UIConstants.TEXT_LIGHT);
         passwordField = new JPasswordField();
-        passwordField.setFont(FONT_FIELD);
-        passwordField.setMaximumSize(new Dimension(Integer.MAX_VALUE, passwordLabel.getPreferredSize().height + 12));
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        passwordField.setBorder(new CompoundBorder(
-            new LineBorder(new Color(200, 200, 200), 1, true),
-            new EmptyBorder(4, 10, 4, 10)
-        ));
- 
-        // Error label
+        passwordField.setFont(UIConstants.F_BODY);
+        passwordField.setHorizontalAlignment(JTextField.LEFT);
+        passwordField.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 4));
+        passwordField.setBackground(Color.WHITE);
+        JButton toggle = new JButton("\u25CE");
+        toggle.setBorderPainted(false);
+        toggle.setContentAreaFilled(false);
+        toggle.setFocusPainted(false);
+        toggle.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        toggle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        toggle.addActionListener(e ->
+            passwordField.setEchoChar(
+                passwordField.getEchoChar() == 0 ? '\u2022' : (char) 0));
+        passWrap.add(passIcon,      BorderLayout.WEST);
+        passWrap.add(passwordField, BorderLayout.CENTER);
+        passWrap.add(toggle,        BorderLayout.EAST);
+
+        // Error
         errorLabel = new JLabel(" ");
-        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        errorLabel.setForeground(COLOR_ERROR);
-        errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
- 
-        // Login button
-        loginButton = new JButton("Masuk");
-        loginButton.setFont(FONT_BUTTON);
-        loginButton.setBackground(COLOR_PRIMARY);
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setFocusPainted(false);
-        loginButton.setBorderPainted(false);
-        loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        loginButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        errorLabel.setFont(UIConstants.F_SMALL);
+        errorLabel.setForeground(new Color(220, 53, 69));
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setMaximumSize(new Dimension(292, 18));
+
+        // Button
+        loginButton = UIConstants.primaryButton("Masuk");
+        loginButton.setMaximumSize(new Dimension(292, 42));
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
- 
-        // Hover effect
-        loginButton.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                loginButton.setBackground(new Color(0, 105, 105));
-            }
-            public void mouseExited(MouseEvent e) {
-                loginButton.setBackground(COLOR_PRIMARY);
-            }
-        });
- 
-        // Enter key triggers login
-        passwordField.addActionListener(e -> loginButton.doClick());
- 
+        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
         // Footer
-        JLabel footer = new JLabel("© 2026 SIMPOKA");
+        JLabel footer = new JLabel("\u00A9 2026 Student Organization Activity Monitor");
         footer.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        footer.setForeground(new Color(180, 180, 180));
+        footer.setForeground(UIConstants.TEXT_LIGHT);
         footer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //Assemble card
+        passwordField.addActionListener(e -> loginButton.doClick());
+
         card.add(title);
         card.add(Box.createVerticalStrut(6));
         card.add(subtitle);
         card.add(Box.createVerticalStrut(20));
-        card.add(separator);
+        card.add(sep);
         card.add(Box.createVerticalStrut(24));
-        card.add(usernameLabel);
+        card.add(userLabel);
         card.add(Box.createVerticalStrut(6));
-        card.add(usernameField);
-        card.add(Box.createVerticalStrut(16));
-        card.add(passwordLabel);
+        card.add(userWrap);
+        card.add(Box.createVerticalStrut(14));
+        card.add(passLabel);
         card.add(Box.createVerticalStrut(6));
-        card.add(passwordField);
+        card.add(passWrap);
         card.add(Box.createVerticalStrut(6));
         card.add(errorLabel);
-        card.add(Box.createVerticalStrut(10));
+        card.add(Box.createVerticalStrut(16));
         card.add(loginButton);
         card.add(Box.createVerticalStrut(20));
         card.add(footer);
 
-        background.add(card);
-        setContentPane(background);
- 
-    }
-    
-    //public API untuk aaAuthController
-
-    public String getUsername() {
-        return usernameField.getText().trim();
+        add(card);
     }
 
-    public String getPassword() {
-        return new String(passwordField.getPassword());
+    private JPanel buildFieldWrap() {
+        JPanel wrap = new JPanel(new BorderLayout(4, 0));
+        wrap.setBackground(Color.WHITE);
+        wrap.setBorder(new UIConstants.RoundedBorder(6, UIConstants.BORDER, 1));
+        return wrap;
     }
 
-    public void showError(String message) {
-        errorLabel.setText(message);
+    public String getUsername()    { return usernameField.getText().trim(); }
+    public String getPassword()    { return new String(passwordField.getPassword()); }
+    public void showError(String m){ errorLabel.setText(m); }
+    public void clearError()       { errorLabel.setText(" "); }
+    public void setLoginEnabled(boolean b) {
+        loginButton.setEnabled(b);
+        loginButton.setText(b ? "Masuk" : "Memproses...");
+    }
+    public void addLoginListener(ActionListener l) {
+        loginButton.addActionListener(l);
     }
 
-    public void clearError() {
-        errorLabel.setText(" ");
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try { UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf"); }
+            catch (Exception ignored) {}
+            new LoginFrame().setVisible(true);
+        });
     }
-
-    public void addLoginListener(ActionListener listener) {
-        loginButton.addActionListener(listener);
-    }
-
-    public void setLoginEnabled(boolean enabled) {
-        loginButton.setEnabled(enabled);
-        loginButton.setText(enabled ? "Masuk" : "Memproses...");
-    }
-    
-
-    //testing
-    // public static void main(String[] args) {
-    // SwingUtilities.invokeLater(() -> {
-    //     LoginFrame frame = new LoginFrame();
-    //     frame.setVisible(true);
-    // });
 }

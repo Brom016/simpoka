@@ -10,7 +10,9 @@ import com.activitymonitor.util.PDFExporter;
 import com.activitymonitor.view.ActivityFormPanel;
 import com.activitymonitor.view.ActivityTablePanel;
 import com.activitymonitor.view.DashboardFrame;
+import java.awt.Desktop;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
@@ -33,12 +35,15 @@ public class ActivityController {
         this.currentUser = currentUser;
 
         bindEvents();
+        tablePanel.setCrudEnabled(canManageActivities());
         loadAll();
     }
 
     // ── Load data ─────────────────────────────────────────────────
     private void loadAll() {
-        currentList = activityDAO.findAll(currentUser.getOrganizationId());
+        currentList = canViewAllOrganizations()
+            ? activityDAO.findAll()
+            : activityDAO.findAll(currentUser.getOrganizationId());
         renderTable(currentList);
     }
 
@@ -55,6 +60,7 @@ public class ActivityController {
             };
         }
         tablePanel.setTableData(data);
+        dashboard.setReportActivities(list);
     }
 
     // ── Bind events ───────────────────────────────────────────────
@@ -64,6 +70,7 @@ public class ActivityController {
         tablePanel.addEditListener(e   -> handleEdit());
         tablePanel.addDeleteListener(e -> handleDelete());
         tablePanel.addExportListener(e -> handleExport());
+        dashboard.addReportExportListener(e -> handleSelectedExport());
     }
 
     // ── Search ────────────────────────────────────────────────────
@@ -72,14 +79,20 @@ public class ActivityController {
         if (keyword.isEmpty()) {
             loadAll();
         } else {
-            currentList = activityDAO.findByKeyword(keyword,
-                currentUser.getOrganizationId());
+            currentList = canViewAllOrganizations()
+                ? activityDAO.findByKeyword(keyword)
+                : activityDAO.findByKeyword(keyword, currentUser.getOrganizationId());
             renderTable(currentList);
         }
     }
 
     // ── Add ───────────────────────────────────────────────────────
     private void handleAdd() {
+        if (!canManageActivities()) {
+            showAccessDenied();
+            return;
+        }
+
         ActivityFormPanel form = new ActivityFormPanel(dashboard, false);
         form.addSaveListener(e -> {
             String error = InputValidator.validateActivity(
@@ -110,6 +123,11 @@ public class ActivityController {
 
     // ── Edit ──────────────────────────────────────────────────────
     private void handleEdit() {
+        if (!canManageActivities()) {
+            showAccessDenied();
+            return;
+        }
+
         int row = tablePanel.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(dashboard,
@@ -125,7 +143,7 @@ public class ActivityController {
         form.setDescription(selected.getDescription() != null
             ? selected.getDescription() : "");
         form.setDate(selected.getDate().toString());
-        form.setLocation(selected.getLocation());
+        form.setActivityLocation(selected.getLocation());
         form.setParticipantCount(String.valueOf(selected.getParticipantCount()));
         form.setStatus(selected.getStatus());
 
@@ -140,7 +158,8 @@ public class ActivityController {
                 return;
             }
 
-            Activity updated = buildActivity(form, selected.getId());
+            Activity updated = buildActivity(form, selected.getId(),
+                selected.getCreatedBy(), selected.getOrganizationId());
             if (activityDAO.update(updated)) {
                 form.dispose();
                 loadAll();
@@ -158,6 +177,11 @@ public class ActivityController {
 
     // ── Delete ────────────────────────────────────────────────────
     private void handleDelete() {
+        if (!canManageActivities()) {
+            showAccessDenied();
+            return;
+        }
+
         int row = tablePanel.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(dashboard,
@@ -188,7 +212,7 @@ public class ActivityController {
         }
     }
 
-    // ── Export PDF ────────────────────────────────────────────────
+    // ── Export PDF dengan JFileChooser ────────────────────────────
     private void handleExport() {
         if (currentList == null || currentList.isEmpty()) {
             JOptionPane.showMessageDialog(dashboard,
@@ -197,15 +221,51 @@ public class ActivityController {
             return;
         }
 
-        Organization org = orgDAO.findById(currentUser.getOrganizationId());
-        String outputPath = "output/laporan-kegiatan-"
-            + System.currentTimeMillis() + ".pdf";
+        // File chooser — seperti Save dialog di browser
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Simpan Laporan PDF");
+        chooser.setFileFilter(
+            new javax.swing.filechooser.FileNameExtensionFilter(
+                "PDF Files (*.pdf)", "pdf"));
+        chooser.setSelectedFile(
+            new java.io.File("laporan-kegiatan.pdf"));
+        chooser.setAcceptAllFileFilterUsed(false);
 
-        boolean success = PDFExporter.export(currentList, org, outputPath);
+        // Buka di folder output/ jika ada, kalau tidak di Documents
+        java.io.File outputDir = new java.io.File("output");
+        if (outputDir.exists()) {
+            chooser.setCurrentDirectory(outputDir);
+        } else {
+            chooser.setCurrentDirectory(
+                javax.swing.filechooser.FileSystemView
+                    .getFileSystemView().getDefaultDirectory());
+        }
+
+        int result = chooser.showSaveDialog(dashboard);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        // Pastikan ekstensi .pdf
+        String path = chooser.getSelectedFile().getAbsolutePath();
+        if (!path.toLowerCase().endsWith(".pdf")) path += ".pdf";
+
+        Organization org = orgDAO.findById(currentUser.getOrganizationId());
+        boolean success = PDFExporter.export(currentList, org, path);
+
         if (success) {
-            JOptionPane.showMessageDialog(dashboard,
-                "Laporan berhasil disimpan ke:\n" + outputPath,
-                "Ekspor Berhasil", JOptionPane.INFORMATION_MESSAGE);
+            // Buka folder tempat file disimpan (Windows)
+            String finalPath = path;
+            int open = JOptionPane.showConfirmDialog(dashboard,
+                "Laporan berhasil disimpan ke:\n" + finalPath
+                + "\n\nBuka lokasi file?",
+                "Ekspor Berhasil",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+            if (open == JOptionPane.YES_OPTION) {
+                try {
+                    Desktop.getDesktop().open(
+                        new java.io.File(finalPath).getParentFile());
+                } catch (Exception ignored) {}
+            }
         } else {
             JOptionPane.showMessageDialog(dashboard,
                 "Gagal membuat laporan PDF.",
@@ -214,7 +274,82 @@ public class ActivityController {
     }
 
     // ── Helper ────────────────────────────────────────────────────
+    private void handleSelectedExport() {
+        if (currentList == null || currentList.isEmpty()) {
+            JOptionPane.showMessageDialog(dashboard,
+                "Tidak ada data untuk diekspor.",
+                "Perhatian", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        List<Integer> selectedRows = dashboard.getSelectedReportRows();
+        if (selectedRows.isEmpty()) {
+            JOptionPane.showMessageDialog(dashboard,
+                "Pilih minimal satu kegiatan untuk dibuat laporan.",
+                "Perhatian", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        List<Activity> selectedActivities = new ArrayList<>();
+        for (Integer row : selectedRows) {
+            if (row >= 0 && row < currentList.size()) {
+                selectedActivities.add(currentList.get(row));
+            }
+        }
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Simpan Laporan PDF");
+        chooser.setFileFilter(
+            new javax.swing.filechooser.FileNameExtensionFilter(
+                "PDF Files (*.pdf)", "pdf"));
+        chooser.setSelectedFile(new java.io.File("laporan-kegiatan.pdf"));
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        java.io.File outputDir = new java.io.File("output");
+        if (outputDir.exists()) {
+            chooser.setCurrentDirectory(outputDir);
+        } else {
+            chooser.setCurrentDirectory(
+                javax.swing.filechooser.FileSystemView
+                    .getFileSystemView().getDefaultDirectory());
+        }
+
+        int result = chooser.showSaveDialog(dashboard);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        String path = chooser.getSelectedFile().getAbsolutePath();
+        if (!path.toLowerCase().endsWith(".pdf")) path += ".pdf";
+
+        Organization org = orgDAO.findById(currentUser.getOrganizationId());
+        boolean success = PDFExporter.export(selectedActivities, org, path);
+
+        if (success) {
+            String finalPath = path;
+            int open = JOptionPane.showConfirmDialog(dashboard,
+                "Laporan berhasil disimpan ke:\n" + finalPath
+                + "\n\nBuka lokasi file?",
+                "Ekspor Berhasil",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+            if (open == JOptionPane.YES_OPTION) {
+                try {
+                    Desktop.getDesktop().open(
+                        new java.io.File(finalPath).getParentFile());
+                } catch (Exception ignored) {}
+            }
+        } else {
+            JOptionPane.showMessageDialog(dashboard,
+                "Gagal membuat laporan PDF.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private Activity buildActivity(ActivityFormPanel form, int id) {
+        return buildActivity(form, id, currentUser.getId(), currentUser.getOrganizationId());
+    }
+
+    private Activity buildActivity(ActivityFormPanel form, int id,
+                                   int createdBy, int organizationId) {
         String countStr = form.getParticipantCount();
         int count = countStr.isEmpty() ? 0 : Integer.parseInt(countStr);
 
@@ -226,8 +361,35 @@ public class ActivityController {
             form.getActivityLocation(),
             count,
             form.getStatus(),
-            currentUser.getId(),
-            currentUser.getOrganizationId()
+            createdBy,
+            organizationId
         );
+    }
+
+    private boolean canManageActivities() {
+        String role = currentUser.getRole();
+        return role != null && role.equalsIgnoreCase("admin")
+            || canViewAllOrganizations();
+    }
+
+    private boolean canViewAllOrganizations() {
+        String role = currentUser.getRole() != null
+            ? currentUser.getRole().toLowerCase()
+            : "";
+        String username = currentUser.getUsername() != null
+            ? currentUser.getUsername().toLowerCase()
+            : "";
+
+        return role.equals("super_admin")
+            || role.equals("admin_utama")
+            || role.equals("main_admin")
+            || username.equals("bromo.admin")
+            || username.equals("admin");
+    }
+
+    private void showAccessDenied() {
+        JOptionPane.showMessageDialog(dashboard,
+            "Hanya admin yang dapat menambah, mengubah, atau menghapus kegiatan.",
+            "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
     }
 }
