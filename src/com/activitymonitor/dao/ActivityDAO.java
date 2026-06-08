@@ -121,6 +121,19 @@ public class ActivityDAO {
         }
     }
 
+    public boolean updateStatus(int id, String status) {
+        String sql = "UPDATE activities SET status = ? WHERE id = ?";
+        try (PreparedStatement stmt = DBConnection.getConnection()
+                .prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("ActivityDAO.updateStatus: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean delete(int id) {
         String sql = "DELETE FROM activities WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()

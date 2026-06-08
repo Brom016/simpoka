@@ -49,8 +49,10 @@ public class ActivityController {
 
     private void renderTable(List<Activity> list) {
         Object[][] data = new Object[list.size()][];
+        int[] ids = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
             Activity a = list.get(i);
+            ids[i] = a.getId();
             data[i] = new Object[]{
                 a.getName(),
                 a.getDate(),
@@ -59,7 +61,7 @@ public class ActivityController {
                 a.getStatus()
             };
         }
-        tablePanel.setTableData(data);
+        tablePanel.setTableData(data, ids);
         dashboard.setReportActivities(list);
     }
 
@@ -69,6 +71,7 @@ public class ActivityController {
         tablePanel.addAddListener(e    -> handleAdd());
         tablePanel.addEditListener(e   -> handleEdit());
         tablePanel.addDeleteListener(e -> handleDelete());
+        tablePanel.addStatusChangeListener(e -> handleStatusChange(e));
         tablePanel.addExportListener(e -> handleExport());
         dashboard.addReportExportListener(e -> handleSelectedExport());
     }
@@ -209,6 +212,38 @@ public class ActivityController {
                     "Gagal menghapus data. Coba lagi.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    // ── Status Change ─────────────────────────────────────────────
+    private void handleStatusChange(java.awt.event.ActionEvent e) {
+        if (!canManageActivities()) {
+            showAccessDenied();
+            return;
+        }
+
+        int row = tablePanel.getSelectedRow();
+        if (row < 0) return;
+
+        String newStatus = e.getActionCommand();
+        int activityId = tablePanel.getActivityId(row);
+        
+        if (activityId <= 0) {
+            JOptionPane.showMessageDialog(dashboard,
+                "Tidak dapat mengubah status. Coba refresh halaman.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (activityDAO.updateStatus(activityId, newStatus)) {
+            loadAll();
+            JOptionPane.showMessageDialog(dashboard,
+                "Status kegiatan berhasil diperbarui.",
+                "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(dashboard,
+                "Gagal mengubah status. Coba lagi.",
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

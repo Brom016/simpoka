@@ -20,11 +20,14 @@ public class ActivityTablePanel extends JPanel {
     private JButton           nextBtn;
     private boolean           crudEnabled = true;
 
-    private ActionListener onEdit, onDelete;
+    private ActionListener onEdit, onDelete, onStatusChange;
+    private int[] activityIds = new int[0];
 
     private static final String[] COLUMNS = {
         "No", "Nama Kegiatan", "Tanggal", "Lokasi", "Peserta", "Status", ""
     };
+    private static final String[] STATUS_KEYS = {"planned", "ongoing", "completed"};
+    private static final String[] STATUS_LABELS = {"Direncanakan", "Berlangsung", "Selesai"};
 
     public ActivityTablePanel() {
         initComponents();
@@ -217,6 +220,13 @@ public class ActivityTablePanel extends JPanel {
             if (onEdit != null) onEdit.actionPerformed(e);
         });
 
+        JMenuItem statusItem = new JMenuItem("  Ubah Status");
+        statusItem.setFont(UIConstants.F_BODY);
+        statusItem.addActionListener(e -> {
+            table.setRowSelectionInterval(row, row);
+            showStatusDialog(row);
+        });
+
         JMenuItem delItem = new JMenuItem("  Hapus");
         delItem.setFont(UIConstants.F_BODY);
         delItem.setForeground(new Color(220, 38, 38));
@@ -226,6 +236,7 @@ public class ActivityTablePanel extends JPanel {
         });
 
         menu.add(editItem);
+        menu.add(statusItem);
         menu.addSeparator();
         menu.add(delItem);
         menu.show(invoker, -80, invoker.getHeight());
@@ -259,8 +270,9 @@ public class ActivityTablePanel extends JPanel {
     }
 
     // ── Public API ────────────────────────────────────────────────
-    public void setTableData(Object[][] data) {
+    public void setTableData(Object[][] data, int[] ids) {
         tableModel.setRowCount(0);
+        activityIds = ids != null ? ids : new int[0];
         int no = 1;
         for (Object[] row : data) {
             Object[] r = new Object[COLUMNS.length];
@@ -272,10 +284,76 @@ public class ActivityTablePanel extends JPanel {
         countLabel.setText("Menampilkan " + data.length + " dari " + data.length + " data");
     }
 
+    public void setTableData(Object[][] data) {
+        setTableData(data, new int[data.length]);
+    }
+
     public void clearTable()               { tableModel.setRowCount(0); }
     public int    getSelectedRow()         { return table.getSelectedRow(); }
     public Object getValueAt(int r, int c) { return tableModel.getValueAt(r, c); }
     public String getSearchKeyword()       { return searchField.getText().trim(); }
+    public int    getActivityId(int row)   { 
+        return row >= 0 && row < activityIds.length ? activityIds[row] : -1; 
+    }
+
+    private void showStatusDialog(int row) {
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
+            "Ubah Status", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setResizable(false);
+        dialog.setSize(300, 150);
+        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
+
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(new EmptyBorder(16, 16, 16, 16));
+        panel.setBackground(Color.WHITE);
+
+        JLabel label = new JLabel("Pilih Status Baru:");
+        label.setFont(UIConstants.F_BODY);
+
+        JComboBox<String> statusCombo = new JComboBox<>(STATUS_LABELS);
+        statusCombo.setFont(UIConstants.F_BODY);
+        statusCombo.setBackground(Color.WHITE);
+        statusCombo.setPreferredSize(new Dimension(0, 36));
+
+        String currentStatus = (String) tableModel.getValueAt(row, 5);
+        for (int i = 0; i < STATUS_LABELS.length; i++) {
+            if (STATUS_LABELS[i].equals(currentStatus)) {
+                statusCombo.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        JButton saveBtn = UIConstants.primaryButton("Simpan");
+        JButton cancelBtn = UIConstants.outlineButton("Batal");
+
+        saveBtn.addActionListener(e -> {
+            int idx = statusCombo.getSelectedIndex();
+            String newStatus = idx >= 0 ? STATUS_KEYS[idx] : "planned";
+            if (onStatusChange != null) {
+                onStatusChange.actionPerformed(new ActionEvent(statusCombo,
+                    ActionEvent.ACTION_PERFORMED, newStatus));
+            }
+            dialog.dispose();
+        });
+        cancelBtn.addActionListener(e -> dialog.dispose());
+
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        btnPanel.setOpaque(false);
+        btnPanel.add(cancelBtn);
+        btnPanel.add(saveBtn);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 10));
+        centerPanel.setOpaque(false);
+        centerPanel.add(label, BorderLayout.NORTH);
+        centerPanel.add(statusCombo, BorderLayout.CENTER);
+
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(btnPanel, BorderLayout.SOUTH);
+
+        dialog.setContentPane(panel);
+        dialog.setVisible(true);
+    }
 
     public void addSearchListener(ActionListener l) {
         searchField.addActionListener(l);
@@ -291,6 +369,9 @@ public class ActivityTablePanel extends JPanel {
     public void addDeleteListener(ActionListener l) {
         this.onDelete = l;
         deleteButton.addActionListener(l);
+    }
+    public void addStatusChangeListener(ActionListener l) {
+        this.onStatusChange = l;
     }
     public void addExportListener(ActionListener l) { exportButton.addActionListener(l); }
     public void addTableSelectionListener(
