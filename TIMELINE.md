@@ -23,7 +23,6 @@
 
 **Output:** Aplikasi berhasil terhubung ke database
 
-**PIC:** Ahmad Irfaul (Database) + Muhammad Rifki (Backend)
 
 ---
 
@@ -38,7 +37,6 @@
 
 **Output:** Data kegiatan berhasil disimpan ke database
 
-**PIC:** Katrina (UI Form) + Muhammad Rifki (Logic INSERT)
 
 ---
 
@@ -53,7 +51,6 @@
 
 **Output:** Daftar kegiatan tampil di tabel aplikasi
 
-**PIC:** Katrina (UI Tabel) + Muhammad Rifki (Query SELECT)
 
 ---
 
@@ -68,7 +65,6 @@
 
 **Output:** Operasi CRUD lengkap berjalan
 
-**PIC:** Katrina (UI tombol) + Muhammad Rifki (Query UPDATE & DELETE)
 
 ---
 
@@ -83,7 +79,6 @@
 
 **Output:** Fitur pencarian berjalan + file PDF berhasil dibuat
 
-**PIC:** Muhammad Rifki (Query Search + Logic PDF) + Katrina (UI Search)
 
 ---
 
@@ -98,7 +93,6 @@
 
 **Output:** Aplikasi stabil dan berjalan tanpa error
 
-**PIC:** Hamid Argo (Integrator + QC)
 
 ---
 
@@ -114,7 +108,6 @@
 
 **Output:** Sistem siap dipresentasikan
 
-**PIC:** Seluruh Tim
 
 ---
 
