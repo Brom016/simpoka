@@ -1,5 +1,6 @@
 package com.activitymonitor.util;
 
+//Dibuat oleh: ahmad irfaul, hamid bromo
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +21,17 @@ public class DBConnection {
         loadConfig();
     }
 
+    //ahmad irfaul, hamid bromo - enkapsulasi - memuat konfigurasi dari file properties
     private static void loadConfig() {
         Properties props = new Properties();
 
-        // Coba baca dari file di root project dulu
+        //coba baca dari file
         try (InputStream fileStream =
                 new FileInputStream("database.properties")) {
             props.load(fileStream);
 
         } catch (IOException e1) {
-            // Fallback: baca dari classpath (dalam jar)
+            //fallback classpath
             try (InputStream cpStream =
                     DBConnection.class.getClassLoader()
                         .getResourceAsStream("database.properties")) {
@@ -49,6 +51,7 @@ public class DBConnection {
         DB_PASSWORD = props.getProperty("DB_PASSWORD", "");
     }
 
+    //ahmad irfaul, hamid bromo - enkapsulasi - mengambil koneksi database
     public static Connection getConnection() {
         if (connection == null) {
             try {
@@ -64,6 +67,7 @@ public class DBConnection {
         return connection;
     }
 
+    //ahmad irfaul, hamid bromo - enkapsulasi - menutup koneksi database
     public static void closeConnection() {
         if (connection != null) {
             try {

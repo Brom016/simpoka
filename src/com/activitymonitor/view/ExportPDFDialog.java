@@ -1,5 +1,6 @@
 package com.activitymonitor.view;
 
+//Dibuat oleh: katrina, hamid bromo
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,12 +12,14 @@ public class ExportPDFDialog extends JDialog {
     private JButton    exportBtn;
     private JButton    cancelBtn;
 
+    //katrina, hamid bromo - enkapsulasi - method constructorExportPDFDialog
     public ExportPDFDialog(Frame parent) {
         super(parent, true);
         initComponents();
         setupDialog();
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi dialog
     private void setupDialog() {
         setTitle("Ekspor PDF");
         setSize(380, 320);
@@ -24,11 +27,12 @@ public class ExportPDFDialog extends JDialog {
         setResizable(false);
     }
 
+    //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         JPanel root = new JPanel(new BorderLayout());
         root.setBackground(Color.WHITE);
 
-        // Header
+        //header
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
         header.setBorder(new CompoundBorder(
@@ -62,6 +66,7 @@ public class ExportPDFDialog extends JDialog {
         iconWrap.setOpaque(false);
         JLabel icon = new JLabel() {
             @Override
+            //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -131,6 +136,8 @@ public class ExportPDFDialog extends JDialog {
         setContentPane(root);
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengambil nama file dari input
     public String getFileName()  { return fileNameField.getText().trim(); }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol ekspor
     public void addExportListener(ActionListener l) { exportBtn.addActionListener(l); }
 }

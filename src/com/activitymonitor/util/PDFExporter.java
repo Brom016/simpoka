@@ -1,5 +1,6 @@
 package com.activitymonitor.util;
 
+//Dibuat oleh: muhamad rifki, hamid bromo
 import com.activitymonitor.model.Activity;
 import com.activitymonitor.model.Organization;
 import com.itextpdf.text.*;
@@ -31,10 +32,11 @@ public class PDFExporter {
     private static final Font FONT_FOOTER   = FontFactory.getFont(
         FontFactory.HELVETICA, 9, BaseColor.GRAY);
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mengekspor data ke file PDF
     public static boolean export(List<Activity> activities,
                                  Organization org, String outputPath) {
         try {
-            // Buat folder output jika belum ada
+            //buat folder output
             new java.io.File("output").mkdirs();
 
             Document doc = new Document(PageSize.A4.rotate(),
@@ -56,7 +58,9 @@ public class PDFExporter {
         }
     }
 
-    // ── Header ───────────────────────────────────────────────────
+
+    //muhamad rifki, hamid bromo - enkapsulasi - menambahkan header ke dokumen PDF
+
     private static void addHeader(Document doc, Organization org)
             throws DocumentException {
         String orgName = org != null ? org.getName() : "Organisasi";
@@ -72,14 +76,16 @@ public class PDFExporter {
         subtitle.setSpacingAfter(12);
         doc.add(subtitle);
 
-        // Garis pemisah
+        //garis pemisah
         LineSeparator line = new LineSeparator(2, 100, COLOR_PRIMARY,
             Element.ALIGN_CENTER, -2);
         doc.add(new Chunk(line));
         doc.add(Chunk.NEWLINE);
     }
 
-    // ── Meta info ─────────────────────────────────────────────────
+
+    //muhamad rifki, hamid bromo - enkapsulasi - menambahkan meta info ke PDF
+
     private static void addMeta(Document doc, Organization org, int total)
             throws DocumentException {
         String period  = org != null ? org.getPeriod() : "-";
@@ -106,6 +112,7 @@ public class PDFExporter {
         doc.add(printInfo);
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - membuat cell meta info PDF
     private static PdfPCell metaCell(String label, String value) {
         Paragraph p = new Paragraph();
         p.add(new Chunk(label + "\n",
@@ -118,14 +125,16 @@ public class PDFExporter {
         return cell;
     }
 
-    // ── Data table ────────────────────────────────────────────────
+
+    //muhamad rifki, hamid bromo - enkapsulasi - menambahkan tabel data ke PDF
+
     private static void addTable(Document doc, List<Activity> activities)
             throws DocumentException {
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
         table.setWidths(new float[]{0.5f, 2.5f, 2.5f, 1.2f, 1.5f, 0.8f, 1.2f});
 
-        // Header row
+        //header row
         String[] headers = {"No", "Nama Kegiatan", "Deskripsi",
                             "Tanggal", "Lokasi", "Peserta", "Status"};
         for (String h : headers) {
@@ -157,6 +166,7 @@ public class PDFExporter {
         doc.add(table);
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - menambahkan cell ke tabel PDF
     private static void addCell(PdfPTable table, String text,
                                  boolean alt, int align) {
         PdfPCell cell = new PdfPCell(new Phrase(text, FONT_TD));
@@ -168,6 +178,7 @@ public class PDFExporter {
         table.addCell(cell);
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - menerjemahkan status ke Bahasa Indonesia
     private static String translateStatus(String status) {
         switch (status) {
             case "planned"   : return "Direncanakan";
@@ -177,7 +188,9 @@ public class PDFExporter {
         }
     }
 
-    // ── Footer ───────────────────────────────────────────────────
+
+    //muhamad rifki, hamid bromo - enkapsulasi - menambahkan footer ke dokumen PDF
+
     private static void addFooter(Document doc) throws DocumentException {
         doc.add(Chunk.NEWLINE);
         LineSeparator line = new LineSeparator(1, 100, BaseColor.LIGHT_GRAY,

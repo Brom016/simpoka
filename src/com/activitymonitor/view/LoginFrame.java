@@ -1,5 +1,6 @@
 package com.activitymonitor.view;
 
+//Dibuat oleh: katrina, hamid bromo
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,13 +12,15 @@ public class LoginFrame extends JFrame {
     private JButton        loginButton;
     private JLabel         errorLabel;
 
+    //katrina, hamid bromo - enkapsulasi - method constructorLoginFrame
     public LoginFrame() {
         initComponents();
         setupFrame();
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi frame
     private void setupFrame() {
-        setTitle("Activity Monitor — Login");
+        setTitle("Activity Monitor - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(460, 540);
         setLocationRelativeTo(null);
@@ -25,6 +28,7 @@ public class LoginFrame extends JFrame {
         getContentPane().setBackground(UIConstants.BG);
     }
 
+    //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new GridBagLayout());
         getContentPane().setBackground(UIConstants.BG);
@@ -145,6 +149,7 @@ public class LoginFrame extends JFrame {
         add(card);
     }
 
+    //katrina, hamid bromo - enkapsulasi - membangun wrapper field input
     private JPanel buildFieldWrap() {
         JPanel wrap = new JPanel(new BorderLayout(4, 0));
         wrap.setBackground(Color.WHITE);
@@ -152,18 +157,25 @@ public class LoginFrame extends JFrame {
         return wrap;
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengambil input username
     public String getUsername()    { return usernameField.getText().trim(); }
+    //katrina, hamid bromo - enkapsulasi - mengambil input password
     public String getPassword()    { return new String(passwordField.getPassword()); }
+    //katrina, hamid bromo - enkapsulasi - menampilkan pesan error
     public void showError(String m){ errorLabel.setText(m); }
+    //katrina, hamid bromo - enkapsulasi - membersihkan pesan error
     public void clearError()       { errorLabel.setText(" "); }
+    //katrina, hamid bromo - enkapsulasi - mengaktifkan/menonaktifkan tombol login
     public void setLoginEnabled(boolean b) {
         loginButton.setEnabled(b);
         loginButton.setText(b ? "Masuk" : "Memproses...");
     }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol login
     public void addLoginListener(ActionListener l) {
         loginButton.addActionListener(l);
     }
 
+    //katrina, hamid bromo - enkapsulasi - entry point utama aplikasi
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try { UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf"); }
@@ -172,3 +184,4 @@ public class LoginFrame extends JFrame {
         });
     }
 }
+
