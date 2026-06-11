@@ -1,5 +1,6 @@
 package com.activitymonitor.controller;
 
+//Dibuat oleh: hamid bromo
 import com.activitymonitor.dao.ActivityDAO;
 import com.activitymonitor.dao.OrganizationDAO;
 import com.activitymonitor.model.Activity;
@@ -14,6 +15,7 @@ import java.awt.Desktop;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
 public class ActivityController {
@@ -24,9 +26,10 @@ public class ActivityController {
     private final OrganizationDAO  orgDAO;
     private final User             currentUser;
 
-    // Cache ID per baris tabel — index i = row i = activities.get(i).getId()
+    // Cache ID per baris tabel - index i = row i = activities.get(i).getId()
     private List<Activity> currentList;
 
+    //hamid bromo - enkapsulasi - method constructorActivityController
     public ActivityController(DashboardFrame dashboard, User currentUser) {
         this.dashboard   = dashboard;
         this.tablePanel  = dashboard.getTablePanel();
@@ -36,10 +39,36 @@ public class ActivityController {
 
         bindEvents();
         tablePanel.setCrudEnabled(canManageActivities());
-        loadAll();
+        loadAllAsync();
     }
 
-    // ── Load data ─────────────────────────────────────────────────
+    //hamid bromo - enkapsulasi - memuat data kegiatan secara async
+    private void loadAllAsync() {
+        new SwingWorker<List<Activity>, Void>() {
+            @Override
+            //hamid bromo - overriding (polimorfisme) - menjalankan proses di background thread
+            protected List<Activity> doInBackground() {
+                return canViewAllOrganizations()
+                    ? activityDAO.findAll()
+                    : activityDAO.findAll(currentUser.getOrganizationId());
+            }
+
+            @Override
+            //hamid bromo - overriding (polimorfisme) - menangani hasil setelah background selesai
+            protected void done() {
+                try {
+                    currentList = get();
+                    renderTable(currentList);
+                } catch (InterruptedException | ExecutionException e) {
+                    System.err.println("Gagal memuat kegiatan: " + e.getMessage());
+                }
+            }
+        }.execute();
+    }
+
+
+    //hamid bromo - enkapsulasi - memuat semua data kegiatan dari database
+
     private void loadAll() {
         currentList = canViewAllOrganizations()
             ? activityDAO.findAll()
@@ -47,6 +76,7 @@ public class ActivityController {
         renderTable(currentList);
     }
 
+    //hamid bromo - overriding (polimorfisme) - menampilkan data ke tabel
     private void renderTable(List<Activity> list) {
         Object[][] data = new Object[list.size()][];
         int[] ids = new int[list.size()];
@@ -65,7 +95,9 @@ public class ActivityController {
         dashboard.setReportActivities(list);
     }
 
-    // ── Bind events ───────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - mengikat event listener ke komponen UI
+
     private void bindEvents() {
         tablePanel.addSearchListener(e -> handleSearch());
         tablePanel.addAddListener(e    -> handleAdd());
@@ -76,7 +108,9 @@ public class ActivityController {
         dashboard.addReportExportListener(e -> handleSelectedExport());
     }
 
-    // ── Search ────────────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - menangani pencarian kegiatan
+
     private void handleSearch() {
         String keyword = tablePanel.getSearchKeyword();
         if (keyword.isEmpty()) {
@@ -89,7 +123,9 @@ public class ActivityController {
         }
     }
 
-    // ── Add ───────────────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - menangani penambahan kegiatan baru
+
     private void handleAdd() {
         if (!canManageActivities()) {
             showAccessDenied();
@@ -124,7 +160,9 @@ public class ActivityController {
         form.setVisible(true);
     }
 
-    // ── Edit ──────────────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - menangani pengeditan kegiatan
+
     private void handleEdit() {
         if (!canManageActivities()) {
             showAccessDenied();
@@ -178,7 +216,9 @@ public class ActivityController {
         form.setVisible(true);
     }
 
-    // ── Delete ────────────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - menangani penghapusan kegiatan
+
     private void handleDelete() {
         if (!canManageActivities()) {
             showAccessDenied();
@@ -215,7 +255,9 @@ public class ActivityController {
         }
     }
 
-    // ── Status Change ─────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - menangani perubahan status kegiatan
+
     private void handleStatusChange(java.awt.event.ActionEvent e) {
         if (!canManageActivities()) {
             showAccessDenied();
@@ -247,7 +289,9 @@ public class ActivityController {
         }
     }
 
-    // ── Export PDF dengan JFileChooser ────────────────────────────
+
+    //hamid bromo - enkapsulasi - mengekspor laporan ke PDF
+
     private void handleExport() {
         if (currentList == null || currentList.isEmpty()) {
             JOptionPane.showMessageDialog(dashboard,
@@ -256,7 +300,7 @@ public class ActivityController {
             return;
         }
 
-        // File chooser — seperti Save dialog di browser
+        // File chooser - seperti Save dialog di browser
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Simpan Laporan PDF");
         chooser.setFileFilter(
@@ -266,7 +310,7 @@ public class ActivityController {
             new java.io.File("laporan-kegiatan.pdf"));
         chooser.setAcceptAllFileFilterUsed(false);
 
-        // Buka di folder output/ jika ada, kalau tidak di Documents
+        //buka folder output
         java.io.File outputDir = new java.io.File("output");
         if (outputDir.exists()) {
             chooser.setCurrentDirectory(outputDir);
@@ -279,7 +323,7 @@ public class ActivityController {
         int result = chooser.showSaveDialog(dashboard);
         if (result != JFileChooser.APPROVE_OPTION) return;
 
-        // Pastikan ekstensi .pdf
+        //pastikan ekstensi pdf
         String path = chooser.getSelectedFile().getAbsolutePath();
         if (!path.toLowerCase().endsWith(".pdf")) path += ".pdf";
 
@@ -287,7 +331,7 @@ public class ActivityController {
         boolean success = PDFExporter.export(currentList, org, path);
 
         if (success) {
-            // Buka folder tempat file disimpan (Windows)
+            //buka folder file
             String finalPath = path;
             int open = JOptionPane.showConfirmDialog(dashboard,
                 "Laporan berhasil disimpan ke:\n" + finalPath
@@ -308,7 +352,9 @@ public class ActivityController {
         }
     }
 
-    // ── Helper ────────────────────────────────────────────────────
+
+    //hamid bromo - enkapsulasi - mengekspor kegiatan terpilih ke PDF
+
     private void handleSelectedExport() {
         if (currentList == null || currentList.isEmpty()) {
             JOptionPane.showMessageDialog(dashboard,
@@ -379,10 +425,12 @@ public class ActivityController {
         }
     }
 
+    //hamid bromo - enkapsulasi - membangun objek Activity dari form
     private Activity buildActivity(ActivityFormPanel form, int id) {
         return buildActivity(form, id, currentUser.getId(), currentUser.getOrganizationId());
     }
 
+    //hamid bromo - enkapsulasi - membangun objek Activity dari form
     private Activity buildActivity(ActivityFormPanel form, int id,
                                    int createdBy, int organizationId) {
         String countStr = form.getParticipantCount();
@@ -401,12 +449,14 @@ public class ActivityController {
         );
     }
 
+    //hamid bromo - enkapsulasi - memeriksa hak akses kelola kegiatan
     private boolean canManageActivities() {
         String role = currentUser.getRole();
         return role != null && role.equalsIgnoreCase("admin")
             || canViewAllOrganizations();
     }
 
+    //hamid bromo - enkapsulasi - memeriksa hak akses lihat semua organisasi
     private boolean canViewAllOrganizations() {
         String role = currentUser.getRole() != null
             ? currentUser.getRole().toLowerCase()
@@ -422,9 +472,11 @@ public class ActivityController {
             || username.equals("admin");
     }
 
+    //hamid bromo - enkapsulasi - menampilkan pesan akses ditolak
     private void showAccessDenied() {
         JOptionPane.showMessageDialog(dashboard,
             "Hanya admin yang dapat menambah, mengubah, atau menghapus kegiatan.",
             "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
     }
 }
+

@@ -1,15 +1,19 @@
 package com.activitymonitor.util;
 
+//Dibuat oleh: muhamad rifki, hamid bromo
 public class InputValidator {
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memeriksa apakah nilai kosong
     public static boolean isEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memvalidasi format tanggal
     public static boolean isValidDate(String value) {
         return value != null && value.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memvalidasi angka positif
     public static boolean isPositiveInteger(String value) {
         if (isEmpty(value)) return true; // boleh kosong
         try {
@@ -19,6 +23,7 @@ public class InputValidator {
         }
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memvalidasi input kegiatan
     public static String validateActivity(String name, String date,
                                           String location, String participant) {
         if (isEmpty(name))

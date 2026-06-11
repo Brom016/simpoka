@@ -1,5 +1,6 @@
 package com.activitymonitor.dao;
 
+//Dibuat oleh: muhamad rifki, hamid bromo
 import com.activitymonitor.model.Activity;
 import com.activitymonitor.util.DBConnection;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class ActivityDAO {
 
+    //muhamad rifki, hamid bromo - enkapsulasi - menyimpan data baru ke database
     public boolean insert(Activity a) {
         String sql = "INSERT INTO activities "
                    + "(name, description, date, location, participant_count, status, created_by, organization_id) "
@@ -30,6 +32,7 @@ public class ActivityDAO {
         }
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mengambil semua data dari database
     public List<Activity> findAll(int organizationId) {
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM activities WHERE organization_id = ? ORDER BY date DESC";
@@ -44,6 +47,7 @@ public class ActivityDAO {
         return list;
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mengambil semua data dari database
     public List<Activity> findAll() {
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM activities ORDER BY date DESC";
@@ -56,6 +60,7 @@ public class ActivityDAO {
         return list;
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mencari data berdasarkan ID
     public Activity findById(int id) {
         String sql = "SELECT * FROM activities WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -69,6 +74,7 @@ public class ActivityDAO {
         return null;
     }
 
+    //muhamad rifki, hamid bromo - interface (abstraksi) - mencari data berdasarkan kata kunci
     public List<Activity> findByKeyword(String keyword, int organizationId) {
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM activities "
@@ -86,6 +92,7 @@ public class ActivityDAO {
         return list;
     }
 
+    //muhamad rifki, hamid bromo - interface (abstraksi) - mencari data berdasarkan kata kunci
     public List<Activity> findByKeyword(String keyword) {
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM activities "
@@ -102,6 +109,7 @@ public class ActivityDAO {
         return list;
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memperbarui data di database
     public boolean update(Activity a) {
         String sql = "UPDATE activities SET name=?, description=?, date=?, location=?, "
                    + "participant_count=?, status=? WHERE id=?";
@@ -121,6 +129,7 @@ public class ActivityDAO {
         }
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memperbarui status kegiatan
     public boolean updateStatus(int id, String status) {
         String sql = "UPDATE activities SET status = ? WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -134,6 +143,7 @@ public class ActivityDAO {
         }
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - menghapus data dari database
     public boolean delete(int id) {
         String sql = "DELETE FROM activities WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -146,6 +156,7 @@ public class ActivityDAO {
         }
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memetakan baris database ke objek
     private Activity mapRow(ResultSet rs) throws SQLException {
         return new Activity(
             rs.getInt("id"),
@@ -160,3 +171,4 @@ public class ActivityDAO {
         );
     }
 }
+

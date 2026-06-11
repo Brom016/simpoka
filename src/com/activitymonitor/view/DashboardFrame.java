@@ -1,5 +1,6 @@
 package com.activitymonitor.view;
 
+//Dibuat oleh: katrina, hamid bromo
 import com.activitymonitor.model.Activity;
 import java.awt.*;
 import java.awt.event.*;
@@ -26,11 +27,13 @@ public class DashboardFrame extends JFrame {
     // Sidebar item refs for active state toggle
     private JPanel activeSidebarItem;
 
+    //katrina, hamid bromo - enkapsulasi - method constructorDashboardFrame
     public DashboardFrame() {
         initComponents();
         setupFrame();
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi frame
     private void setupFrame() {
         setTitle("Activity Monitor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,6 +42,7 @@ public class DashboardFrame extends JFrame {
         setMinimumSize(new Dimension(900, 580));
     }
 
+    //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new BorderLayout());
         getContentPane().setBackground(UIConstants.BG);
@@ -49,7 +53,9 @@ public class DashboardFrame extends JFrame {
         add(buildMain(),   BorderLayout.CENTER);
     }
 
-    // ── Sidebar ───────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membangun panel sidebar
+
     private JPanel buildSidebar() {
         JPanel side = new JPanel();
         side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
@@ -57,7 +63,7 @@ public class DashboardFrame extends JFrame {
         side.setPreferredSize(new Dimension(165, 0));
         side.setBorder(new MatteBorder(0, 0, 0, 1, UIConstants.BORDER));
 
-        // Logo area
+        //logo area
         JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 14));
         logoPanel.setOpaque(false);
         JLabel logoIcon = UIConstants.icon("grid", 22, UIConstants.PRIMARY);
@@ -69,14 +75,14 @@ public class DashboardFrame extends JFrame {
         logoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
         side.add(logoPanel);
 
-        // Divider
+        //divider
         JSeparator sep = new JSeparator();
         sep.setForeground(UIConstants.BORDER);
         sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
         side.add(sep);
         side.add(Box.createVerticalStrut(8));
 
-        // Menu items
+        //menu items
         JPanel dashItem = buildSideItem("grid",   "Dashboard", true,  e -> showDashboard());
         JPanel kegItem  = buildSideItem("list",   "Kegiatan",  false, e -> showDashboard());
         JPanel lapItem  = buildSideItem("doc",    "Laporan",   false, e -> showLaporan());
@@ -97,6 +103,7 @@ public class DashboardFrame extends JFrame {
         return side;
     }
 
+    //katrina, hamid bromo - enkapsulasi - membangun item menu sidebar
     private JPanel buildSideItem(String iconType, String label,
                                   boolean active, ActionListener onClick) {
         JPanel item = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 9));
@@ -123,14 +130,17 @@ public class DashboardFrame extends JFrame {
         }
 
         item.addMouseListener(new MouseAdapter() {
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse masuk area
             public void mouseEntered(MouseEvent e) {
                 if (item != activeSidebarItem)
                     item.setBackground(new Color(245, 250, 249));
             }
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse keluar area
             public void mouseExited(MouseEvent e) {
                 if (item != activeSidebarItem)
                     item.setBackground(Color.WHITE);
             }
+            //katrina, hamid bromo - interface (abstraksi) - menangani klik mouse
             public void mouseClicked(MouseEvent e) {
                 if (onClick != null) {
                     setActiveItem(item, ico, text);
@@ -143,6 +153,7 @@ public class DashboardFrame extends JFrame {
         return item;
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengubah item sidebar aktif
     private void setActiveItem(JPanel item, JLabel ico, JLabel text) {
         if (activeSidebarItem != null) {
             activeSidebarItem.setBackground(Color.WHITE);
@@ -163,7 +174,9 @@ public class DashboardFrame extends JFrame {
         text.setFont(new Font("Segoe UI", Font.BOLD, 13));
     }
 
-    // ── Main content ──────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membangun area konten utama
+
     private JPanel buildMain() {
         JPanel main = new JPanel(new BorderLayout());
         main.setBackground(UIConstants.BG);
@@ -173,13 +186,14 @@ public class DashboardFrame extends JFrame {
         contentArea.setBackground(UIConstants.BG);
         contentArea.setBorder(new EmptyBorder(24, 24, 24, 24));
 
-        // Default: show dashboard
+        //default show dashboard
         showDashboard();
 
         main.add(contentArea, BorderLayout.CENTER);
         return main;
     }
 
+    //katrina, hamid bromo - enkapsulasi - membangun top bar
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setBackground(Color.WHITE);
@@ -238,7 +252,9 @@ public class DashboardFrame extends JFrame {
         return bar;
     }
 
-    // ── Content views ─────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - menampilkan halaman dashboard
+
     private void showDashboard() {
         contentArea.removeAll();
 
@@ -253,6 +269,7 @@ public class DashboardFrame extends JFrame {
         contentArea.repaint();
     }
 
+    //katrina, hamid bromo - enkapsulasi - menampilkan halaman laporan
     private void showLaporan() {
         contentArea.removeAll();
 
@@ -291,6 +308,7 @@ public class DashboardFrame extends JFrame {
         contentArea.repaint();
     }
 
+    //katrina, hamid bromo - enkapsulasi - membangun card tabel laporan
     private UIConstants.RoundedPanel buildReportTableCard() {
         UIConstants.RoundedPanel card = new UIConstants.RoundedPanel(10);
         card.setBackground(Color.WHITE);
@@ -355,7 +373,9 @@ public class DashboardFrame extends JFrame {
         return card;
     }
 
-    // ── Public API ────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - menampilkan info user di top bar
+
     public void setUserInfo(String name, String role) {
         userNameLabel.setText(name);
         String normalizedRole = role != null ? role.toLowerCase() : "";
@@ -370,10 +390,12 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol logout
     public void addLogoutListener(ActionListener l) {
         for (Component c : sidebar.getComponents()) {
             if (c instanceof JPanel && "logout".equals(((JPanel) c).getName())) {
                 ((JPanel) c).addMouseListener(new MouseAdapter() {
+                    //katrina, hamid bromo - interface (abstraksi) - menangani klik mouse
                     public void mouseClicked(MouseEvent e) {
                         l.actionPerformed(new ActionEvent(
                             e.getSource(), ActionEvent.ACTION_PERFORMED, "logout"));
@@ -383,8 +405,10 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengambil panel tabel kegiatan
     public ActivityTablePanel getTablePanel() { return tablePanel; }
 
+    //katrina, hamid bromo - enkapsulasi - mengisi data kegiatan ke tabel laporan
     public void setReportActivities(List<Activity> activities) {
         if (reportTableModel == null) {
             reportTableModel = new DefaultTableModel(
@@ -410,6 +434,7 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengambil baris laporan terpilih
     public List<Integer> getSelectedReportRows() {
         List<Integer> rows = new ArrayList<>();
         if (reportTableModel == null) return rows;
@@ -421,6 +446,7 @@ public class DashboardFrame extends JFrame {
         return rows;
     }
 
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener ekspor laporan
     public void addReportExportListener(ActionListener l) {
         reportExportListener = l;
         if (reportExportButton != null) {
@@ -428,3 +454,4 @@ public class DashboardFrame extends JFrame {
         }
     }
 }
+

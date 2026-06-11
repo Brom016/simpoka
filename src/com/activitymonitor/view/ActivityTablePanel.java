@@ -1,5 +1,6 @@
 package com.activitymonitor.view;
 
+//Dibuat oleh: katrina, hamid bromo
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
@@ -29,10 +30,12 @@ public class ActivityTablePanel extends JPanel {
     private static final String[] STATUS_KEYS = {"planned", "ongoing", "completed"};
     private static final String[] STATUS_LABELS = {"Direncanakan", "Berlangsung", "Selesai"};
 
+    //katrina, hamid bromo - enkapsulasi - method constructorActivityTablePanel
     public ActivityTablePanel() {
         initComponents();
     }
 
+    //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new BorderLayout(0, 12));
         setOpaque(false);
@@ -42,12 +45,14 @@ public class ActivityTablePanel extends JPanel {
         add(buildFooter(),    BorderLayout.SOUTH);
     }
 
-    // ── Toolbar ───────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membangun toolbar aksi
+
     private JPanel buildToolbar() {
         JPanel bar = new JPanel(new BorderLayout(10, 0));
         bar.setOpaque(false);
 
-        // Search field with drawn icon
+        //search field
         JPanel searchWrap = new JPanel(new BorderLayout(4, 0));
         searchWrap.setBackground(Color.WHITE);
         searchWrap.setBorder(new UIConstants.RoundedBorder(6, UIConstants.BORDER, 1));
@@ -64,7 +69,7 @@ public class ActivityTablePanel extends JPanel {
         searchWrap.add(searchIcon,  BorderLayout.WEST);
         searchWrap.add(searchField, BorderLayout.CENTER);
 
-        // Buttons
+        //buttons
         JPanel btns = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btns.setOpaque(false);
 
@@ -83,7 +88,9 @@ public class ActivityTablePanel extends JPanel {
         return bar;
     }
 
-    // ── Table card ────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membangun card tabel
+
     private UIConstants.RoundedPanel buildTableCard() {
         UIConstants.RoundedPanel card = new UIConstants.RoundedPanel(10);
         card.setBackground(Color.WHITE);
@@ -105,7 +112,7 @@ public class ActivityTablePanel extends JPanel {
         table.setBackground(Color.WHITE);
         table.setIntercellSpacing(new Dimension(0, 0));
 
-        // Header
+        //header
         JTableHeader header = table.getTableHeader();
         header.setFont(UIConstants.F_LABEL);
         header.setBackground(new Color(249, 250, 251));
@@ -122,10 +129,11 @@ public class ActivityTablePanel extends JPanel {
         table.getColumnModel().getColumn(0).setMaxWidth(50);
         table.getColumnModel().getColumn(6).setMaxWidth(50);
 
-        // No renderer - center gray
+        //no renderer center gray
         table.getColumnModel().getColumn(0).setCellRenderer(
             new DefaultTableCellRenderer() {
                 @Override
+                //katrina, hamid bromo - overriding (polimorfisme) - render komponen cell tabel
                 public Component getTableCellRendererComponent(JTable t, Object v,
                         boolean sel, boolean foc, int r, int c) {
                     JLabel l = (JLabel) super.getTableCellRendererComponent(
@@ -139,15 +147,16 @@ public class ActivityTablePanel extends JPanel {
                 }
             });
 
-        // Peserta renderer - center
+        //peserta renderer
         DefaultTableCellRenderer centerR = new DefaultTableCellRenderer();
         centerR.setHorizontalAlignment(SwingConstants.CENTER);
         table.getColumnModel().getColumn(4).setCellRenderer(centerR);
 
-        // Status badge renderer
+        //status badge renderer
         table.getColumnModel().getColumn(5).setCellRenderer(
             new TableCellRenderer() {
                 @Override
+                //katrina, hamid bromo - overriding (polimorfisme) - render komponen cell tabel
                 public Component getTableCellRendererComponent(JTable t, Object val,
                         boolean sel, boolean foc, int row, int col) {
                     UIConstants.StatusBadge badge =
@@ -159,10 +168,11 @@ public class ActivityTablePanel extends JPanel {
                 }
             });
 
-        // Action (3-dot) renderer
+        //action 3-dot renderer
         table.getColumnModel().getColumn(6).setCellRenderer(
             new TableCellRenderer() {
                 @Override
+                //katrina, hamid bromo - overriding (polimorfisme) - render komponen cell tabel
                 public Component getTableCellRendererComponent(JTable t, Object val,
                         boolean sel, boolean foc, int row, int col) {
                     JPanel wrap = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
@@ -172,7 +182,7 @@ public class ActivityTablePanel extends JPanel {
                 }
             });
 
-        // Action editor (clickable 3-dot)
+        //action editor
         table.getColumnModel().getColumn(6).setCellEditor(
             new DefaultCellEditor(new JCheckBox()) {
                 private int editRow;
@@ -184,6 +194,7 @@ public class ActivityTablePanel extends JPanel {
                     wrap.setBackground(Color.WHITE);
                     wrap.add(dotsLbl);
                     wrap.addMouseListener(new MouseAdapter() {
+                        //katrina, hamid bromo - interface (abstraksi) - menangani klik mouse
                         public void mouseClicked(MouseEvent e) {
                             fireEditingStopped();
                             showMenu(wrap, editRow);
@@ -192,6 +203,7 @@ public class ActivityTablePanel extends JPanel {
                 }
 
                 @Override
+                //katrina, hamid bromo - overriding (polimorfisme) - mengambil komponen editor cell
                 public Component getTableCellEditorComponent(JTable t, Object v,
                         boolean sel, int row, int col) {
                     editRow = row;
@@ -208,6 +220,7 @@ public class ActivityTablePanel extends JPanel {
         return card;
     }
 
+    //katrina, hamid bromo - enkapsulasi - menampilkan menu popup aksi
     private void showMenu(Component invoker, int row) {
         if (!crudEnabled) return;
 
@@ -242,7 +255,9 @@ public class ActivityTablePanel extends JPanel {
         menu.show(invoker, -80, invoker.getHeight());
     }
 
-    // ── Footer ────────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membangun panel footer
+
     private JPanel buildFooter() {
         JPanel footer = new JPanel(new BorderLayout());
         footer.setOpaque(false);
@@ -269,7 +284,9 @@ public class ActivityTablePanel extends JPanel {
         return footer;
     }
 
-    // ── Public API ────────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - mengisi data ke tabel
+
     public void setTableData(Object[][] data, int[] ids) {
         tableModel.setRowCount(0);
         activityIds = ids != null ? ids : new int[0];
@@ -284,18 +301,25 @@ public class ActivityTablePanel extends JPanel {
         countLabel.setText("Menampilkan " + data.length + " dari " + data.length + " data");
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengisi data ke tabel
     public void setTableData(Object[][] data) {
         setTableData(data, new int[data.length]);
     }
 
+    //katrina, hamid bromo - enkapsulasi - membersihkan tabel
     public void clearTable()               { tableModel.setRowCount(0); }
+    //katrina, hamid bromo - enkapsulasi - mengambil baris terpilih
     public int    getSelectedRow()         { return table.getSelectedRow(); }
+    //katrina, hamid bromo - enkapsulasi - mengambil nilai cell tertentu
     public Object getValueAt(int r, int c) { return tableModel.getValueAt(r, c); }
+    //katrina, hamid bromo - enkapsulasi - mengambil kata kunci pencarian
     public String getSearchKeyword()       { return searchField.getText().trim(); }
+    //katrina, hamid bromo - enkapsulasi - mengambil ID kegiatan dari baris
     public int    getActivityId(int row)   { 
         return row >= 0 && row < activityIds.length ? activityIds[row] : -1; 
     }
 
+    //katrina, hamid bromo - enkapsulasi - menampilkan dialog ubah status
     private void showStatusDialog(int row) {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
             "Ubah Status", true);
@@ -355,30 +379,39 @@ public class ActivityTablePanel extends JPanel {
         dialog.setVisible(true);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener pencarian
     public void addSearchListener(ActionListener l) {
         searchField.addActionListener(l);
         searchField.addKeyListener(new KeyAdapter() {
+            //katrina, hamid bromo - interface (abstraksi) - menangani tombol keyboard dilepas
             public void keyReleased(KeyEvent e) { l.actionPerformed(null); }
         });
     }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener tambah kegiatan
     public void addAddListener(ActionListener l)    { addButton.addActionListener(l); }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener edit kegiatan
     public void addEditListener(ActionListener l) {
         this.onEdit = l;
         editButton.addActionListener(l);
     }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener hapus kegiatan
     public void addDeleteListener(ActionListener l) {
         this.onDelete = l;
         deleteButton.addActionListener(l);
     }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener ubah status
     public void addStatusChangeListener(ActionListener l) {
         this.onStatusChange = l;
     }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol ekspor
     public void addExportListener(ActionListener l) { exportButton.addActionListener(l); }
+    //katrina, hamid bromo - enkapsulasi - menambahkan listener seleksi tabel
     public void addTableSelectionListener(
             javax.swing.event.ListSelectionListener l) {
         table.getSelectionModel().addListSelectionListener(l);
     }
 
+    //katrina, hamid bromo - enkapsulasi - mengaktifkan/menonaktifkan tombol CRUD
     public void setCrudEnabled(boolean enabled) {
         crudEnabled = enabled;
         addButton.setVisible(enabled);
@@ -391,3 +424,4 @@ public class ActivityTablePanel extends JPanel {
         repaint();
     }
 }
+

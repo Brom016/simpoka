@@ -1,5 +1,6 @@
 package com.activitymonitor.dao;
 
+//Dibuat oleh: muhamad rifki, hamid bromo
 import com.activitymonitor.model.Organization;
 import com.activitymonitor.util.DBConnection;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class OrganizationDAO {
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mencari data berdasarkan ID
     public Organization findById(int id) {
         String sql = "SELECT * FROM organizations WHERE id = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -22,6 +24,7 @@ public class OrganizationDAO {
         return null;
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - mengambil semua data dari database
     public List<Organization> findAll() {
         List<Organization> list = new ArrayList<>();
         String sql = "SELECT * FROM organizations ORDER BY name ASC";
@@ -34,6 +37,7 @@ public class OrganizationDAO {
         return list;
     }
 
+    //muhamad rifki, hamid bromo - enkapsulasi - memetakan baris database ke objek
     private Organization mapRow(ResultSet rs) throws SQLException {
         return new Organization(
             rs.getInt("id"),

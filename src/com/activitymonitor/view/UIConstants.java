@@ -1,5 +1,6 @@
 package com.activitymonitor.view;
 
+//Dibuat oleh: katrina, hamid bromo
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
@@ -32,10 +33,13 @@ public class UIConstants {
     public static final Font F_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
     public static final Font F_BTN      = new Font("Segoe UI", Font.BOLD, 13);
 
-    // ── Drawn Icons ───────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membuat label ikon kustom
+
     public static JLabel icon(String type, int size, Color color) {
         return new JLabel() {
             @Override
+            //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -65,6 +69,7 @@ public class UIConstants {
         };
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon grid
     private static void drawGrid(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int h = s / 2 - 1;
@@ -74,6 +79,7 @@ public class UIConstants {
         g.drawRoundRect(h + 2, h + 2, h, h, 3, 3);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon list
     private static void drawList(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.fillOval(0, s / 4 - 1, 3, 3);
@@ -84,6 +90,7 @@ public class UIConstants {
         g.drawLine(6, 3 * s / 4, s, 3 * s / 4);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon dokumen
     private static void drawDoc(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int fold = s / 4;
@@ -97,6 +104,7 @@ public class UIConstants {
         g.drawLine(3, s * 4 / 5, s * 3 / 5, s * 4 / 5);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon logout
     private static void drawLogout(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         // Door frame
@@ -110,6 +118,7 @@ public class UIConstants {
         g.drawLine(s - s / 3, s / 2 + s / 4, s, s / 2);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon search
     private static void drawSearch(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int r = s * 3 / 7;
@@ -119,6 +128,7 @@ public class UIConstants {
         g.drawLine(lx, ly, s, s);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon user
     private static void drawUser(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int cx = s / 2, cy = s / 3, r = s / 4;
@@ -126,12 +136,14 @@ public class UIConstants {
         g.drawArc(s / 8, s / 2, s * 3 / 4, s * 2 / 3, 0, 180);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon plus
     private static void drawPlus(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.drawLine(s / 2, 2, s / 2, s - 2);
         g.drawLine(2, s / 2, s - 2, s / 2);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon titik tiga
     private static void drawDots(Graphics2D g, int s) {
         int r = 2, cx = s / 2;
         g.fillOval(cx - r, s / 5 - r, r * 2, r * 2);
@@ -139,6 +151,7 @@ public class UIConstants {
         g.fillOval(cx - r, s * 4 / 5 - r, r * 2, r * 2);
     }
 
+    //katrina, hamid bromo - enkapsulasi - menggambar ikon PDF
     private static void drawPdf(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.drawRoundRect(1, 1, s - 2, s - 2, 4, 4);
@@ -149,16 +162,18 @@ public class UIConstants {
             (s + fm.getAscent() - fm.getDescent()) / 2);
     }
 
-    // ── Rounded border ────────────────────────────────────────────
+
     public static class RoundedBorder extends AbstractBorder {
         private final int radius, thickness;
         private final Color color;
 
+        //katrina, hamid bromo - enkapsulasi - method constructorRoundedBorder
         public RoundedBorder(int radius, Color color, int thickness) {
             this.radius = radius; this.color = color; this.thickness = thickness;
         }
 
         @Override
+        //katrina, hamid bromo - overriding (polimorfisme) - menggambar border kustom
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -171,19 +186,22 @@ public class UIConstants {
         }
 
         @Override
+        //katrina, hamid bromo - overriding (polimorfisme) - mengambil ukuran inset border
         public Insets getBorderInsets(Component c) {
             int i = thickness + 4; return new Insets(i, i, i, i);
         }
     }
 
-    // ── Rounded panel ─────────────────────────────────────────────
+
     public static class RoundedPanel extends JPanel {
         private final int radius;
+        //katrina, hamid bromo - enkapsulasi - method constructorRoundedPanel
         public RoundedPanel(int radius) {
             this.radius = radius; setOpaque(false);
         }
 
         @Override
+        //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -197,10 +215,11 @@ public class UIConstants {
         }
     }
 
-    // ── Status badge ──────────────────────────────────────────────
+
     public static class StatusBadge extends JLabel {
         private Color bg = BORDER;
 
+        //katrina, hamid bromo - enkapsulasi - method constructorStatusBadge
         public StatusBadge(String status) {
             setStatus(status);
             setHorizontalAlignment(CENTER);
@@ -209,6 +228,7 @@ public class UIConstants {
             setOpaque(false);
         }
 
+        //katrina, hamid bromo - enkapsulasi - mengubah tampilan status badge
         public void setStatus(String status) {
             switch (status != null ? status : "") {
                 case "planned":
@@ -234,6 +254,7 @@ public class UIConstants {
         }
 
         @Override
+        //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -245,11 +266,14 @@ public class UIConstants {
         }
     }
 
-    // ── Button helpers ────────────────────────────────────────────
+
+    //katrina, hamid bromo - enkapsulasi - membuat tombol primary dengan style
+
     public static JButton primaryButton(String text) {
         return styledButton(text, PRIMARY, PRIMARY_DARK, Color.WHITE);
     }
 
+    //katrina, hamid bromo - enkapsulasi - membuat tombol outline dengan style
     public static JButton outlineButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(F_BTN);
@@ -259,12 +283,15 @@ public class UIConstants {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setBorder(new RoundedBorder(6, BORDER, 1));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse masuk area
             public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(BG); }
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse keluar area
             public void mouseExited(java.awt.event.MouseEvent e)  { btn.setBackground(Color.WHITE); }
         });
         return btn;
     }
 
+    //katrina, hamid bromo - enkapsulasi - membuat tombol dengan style kustom
     private static JButton styledButton(String text, Color bg, Color hover, Color fg) {
         JButton btn = new JButton(text);
         btn.setFont(F_BTN);
@@ -275,7 +302,9 @@ public class UIConstants {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse masuk area
             public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(hover); }
+            //katrina, hamid bromo - interface (abstraksi) - menangani mouse keluar area
             public void mouseExited(java.awt.event.MouseEvent e)  { btn.setBackground(bg); }
         });
         return btn;
