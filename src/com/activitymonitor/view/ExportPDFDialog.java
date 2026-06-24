@@ -1,17 +1,23 @@
 package com.activitymonitor.view;
 
 //Dibuat oleh: katrina, hamid bromo
+// Digunakan untuk kelas dasar AWT
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+// Dialog untuk ekspor laporan ke PDF
 public class ExportPDFDialog extends JDialog {
 
+    // Field input nama file PDF
     private JTextField fileNameField;
+    // Tombol export
     private JButton    exportBtn;
+    // Tombol batal
     private JButton    cancelBtn;
 
+    // Menginisialisasi dialog ekspor PDF
     //katrina, hamid bromo - enkapsulasi - method constructorExportPDFDialog
     public ExportPDFDialog(Frame parent) {
         super(parent, true);
@@ -19,6 +25,7 @@ public class ExportPDFDialog extends JDialog {
         setupDialog();
     }
 
+    // Mengatur judul, ukuran, dan posisi dialog
     //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi dialog
     private void setupDialog() {
         setTitle("Ekspor PDF");
@@ -27,12 +34,13 @@ public class ExportPDFDialog extends JDialog {
         setResizable(false);
     }
 
+    // Membangun seluruh komponen UI dialog
     //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         JPanel root = new JPanel(new BorderLayout());
         root.setBackground(Color.WHITE);
 
-        //header
+        // Panel header dengan judul dan tombol tutup
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
         header.setBorder(new CompoundBorder(
@@ -55,13 +63,13 @@ public class ExportPDFDialog extends JDialog {
         header.add(title, BorderLayout.WEST);
         header.add(close, BorderLayout.EAST);
 
-        // Body
+        // Panel body dengan ikon, deskripsi, dan input nama file
         JPanel body = new JPanel();
         body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
         body.setBackground(Color.WHITE);
         body.setBorder(new EmptyBorder(24, 24, 12, 24));
 
-        // PDF icon (drawn)
+        // Ikon PDF yang digambar secara manual
         JPanel iconWrap = new JPanel(new FlowLayout(FlowLayout.CENTER));
         iconWrap.setOpaque(false);
         JLabel icon = new JLabel() {
@@ -136,8 +144,10 @@ public class ExportPDFDialog extends JDialog {
         setContentPane(root);
     }
 
+    // Mengambil nama file dari input
     //katrina, hamid bromo - enkapsulasi - mengambil nama file dari input
     public String getFileName()  { return fileNameField.getText().trim(); }
+    // Menambahkan listener untuk tombol export
     //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol ekspor
     public void addExportListener(ActionListener l) { exportBtn.addActionListener(l); }
 }

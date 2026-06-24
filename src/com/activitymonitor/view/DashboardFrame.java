@@ -1,6 +1,7 @@
 package com.activitymonitor.view;
 
 //Dibuat oleh: katrina, hamid bromo
+// Digunakan untuk model Activity
 import com.activitymonitor.model.Activity;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,27 +13,39 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+// Frame utama dashboard setelah login
 public class DashboardFrame extends JFrame {
 
+    // Label nama user di top bar
     private JLabel             userNameLabel;
+    // Label role user di top bar
     private JLabel             userRoleLabel;
+    // Panel tabel kegiatan
     private ActivityTablePanel tablePanel;
+    // Tabel laporan untuk ekspor PDF
     private JTable             reportTable;
+    // Model tabel laporan
     private DefaultTableModel  reportTableModel;
+    // Tombol ekspor laporan PDF
     private JButton            reportExportButton;
+    // Listener tombol ekspor laporan
     private ActionListener     reportExportListener;
+    // Area konten utama yang dapat berganti halaman
     private JPanel             contentArea;
+    // Panel sidebar navigasi
     private JPanel             sidebar;
 
-    // Sidebar item refs for active state toggle
+    // Item sidebar yang sedang aktif
     private JPanel activeSidebarItem;
 
+    // Menginisialisasi frame dashboard utama
     //katrina, hamid bromo - enkapsulasi - method constructorDashboardFrame
     public DashboardFrame() {
         initComponents();
         setupFrame();
     }
 
+    // Mengatur judul, ukuran, dan posisi frame
     //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi frame
     private void setupFrame() {
         setTitle("Activity Monitor");
@@ -42,6 +55,7 @@ public class DashboardFrame extends JFrame {
         setMinimumSize(new Dimension(900, 580));
     }
 
+    // Membangun seluruh komponen UI dashboard
     //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new BorderLayout());
@@ -54,6 +68,7 @@ public class DashboardFrame extends JFrame {
     }
 
 
+    // Membangun panel sidebar navigasi
     //katrina, hamid bromo - enkapsulasi - membangun panel sidebar
 
     private JPanel buildSidebar() {
@@ -63,7 +78,7 @@ public class DashboardFrame extends JFrame {
         side.setPreferredSize(new Dimension(165, 0));
         side.setBorder(new MatteBorder(0, 0, 0, 1, UIConstants.BORDER));
 
-        //logo area
+        // Area logo aplikasi
         JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 14));
         logoPanel.setOpaque(false);
         JLabel logoIcon = UIConstants.icon("grid", 22, UIConstants.PRIMARY);
@@ -103,6 +118,7 @@ public class DashboardFrame extends JFrame {
         return side;
     }
 
+    // Membangun item menu pada sidebar
     //katrina, hamid bromo - enkapsulasi - membangun item menu sidebar
     private JPanel buildSideItem(String iconType, String label,
                                   boolean active, ActionListener onClick) {
@@ -153,6 +169,7 @@ public class DashboardFrame extends JFrame {
         return item;
     }
 
+    // Mengubah item sidebar yang aktif dan memperbarui tampilannya
     //katrina, hamid bromo - enkapsulasi - mengubah item sidebar aktif
     private void setActiveItem(JPanel item, JLabel ico, JLabel text) {
         if (activeSidebarItem != null) {
@@ -175,6 +192,7 @@ public class DashboardFrame extends JFrame {
     }
 
 
+    // Membangun area konten utama dashboard
     //katrina, hamid bromo - enkapsulasi - membangun area konten utama
 
     private JPanel buildMain() {
@@ -193,6 +211,7 @@ public class DashboardFrame extends JFrame {
         return main;
     }
 
+    // Membangun top bar dengan info user dan navigasi
     //katrina, hamid bromo - enkapsulasi - membangun top bar
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new BorderLayout());
@@ -253,6 +272,7 @@ public class DashboardFrame extends JFrame {
     }
 
 
+    // Menampilkan halaman daftar kegiatan
     //katrina, hamid bromo - enkapsulasi - menampilkan halaman dashboard
 
     private void showDashboard() {
@@ -269,6 +289,7 @@ public class DashboardFrame extends JFrame {
         contentArea.repaint();
     }
 
+    // Menampilkan halaman laporan kegiatan
     //katrina, hamid bromo - enkapsulasi - menampilkan halaman laporan
     private void showLaporan() {
         contentArea.removeAll();
@@ -308,18 +329,22 @@ public class DashboardFrame extends JFrame {
         contentArea.repaint();
     }
 
+    // Membangun card tabel laporan untuk ekspor PDF
     //katrina, hamid bromo - enkapsulasi - membangun card tabel laporan
     private UIConstants.RoundedPanel buildReportTableCard() {
         UIConstants.RoundedPanel card = new UIConstants.RoundedPanel(10);
         card.setBackground(Color.WHITE);
         card.setLayout(new BorderLayout());
 
+        // Inisialisasi model tabel laporan dengan kolom checklist
         if (reportTableModel == null) {
             reportTableModel = new DefaultTableModel(
                 new Object[]{"Pilih", "Nama Kegiatan", "Tanggal", "Lokasi", "Status"}, 0) {
+                // Hanya kolom checklist yang dapat diedit
                 @Override public boolean isCellEditable(int row, int col) {
                     return col == 0;
                 }
+                // Tipe kolom checklist adalah Boolean
                 @Override public Class<?> getColumnClass(int col) {
                     return col == 0 ? Boolean.class : String.class;
                 }
@@ -374,24 +399,30 @@ public class DashboardFrame extends JFrame {
     }
 
 
+    // Menampilkan nama dan role user di top bar
     //katrina, hamid bromo - enkapsulasi - menampilkan info user di top bar
 
     public void setUserInfo(String name, String role) {
         userNameLabel.setText(name);
+        // Normalisasi role dan tampilkan label yang sesuai
         String normalizedRole = role != null ? role.toLowerCase() : "";
+        // Admin utama memiliki akses penuh ke semua organisasi
         if (normalizedRole.equals("admin_utama")
                 || normalizedRole.equals("super_admin")
                 || normalizedRole.equals("main_admin")) {
             userRoleLabel.setText("ADMIN UTAMA");
         } else if (normalizedRole.equals("admin")) {
+            // Admin organisasi hanya mengelola organisasinya sendiri
             userRoleLabel.setText("ADMIN ORGANISASI");
         } else {
             userRoleLabel.setText("ANGGOTA");
         }
     }
 
+    // Menambahkan listener untuk tombol logout di sidebar
     //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol logout
     public void addLogoutListener(ActionListener l) {
+        // Cari item logout di sidebar dan tambahkan listener
         for (Component c : sidebar.getComponents()) {
             if (c instanceof JPanel && "logout".equals(((JPanel) c).getName())) {
                 ((JPanel) c).addMouseListener(new MouseAdapter() {
@@ -405,11 +436,14 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    // Mengambil panel tabel kegiatan
     //katrina, hamid bromo - enkapsulasi - mengambil panel tabel kegiatan
     public ActivityTablePanel getTablePanel() { return tablePanel; }
 
+    // Mengisi data kegiatan ke tabel laporan
     //katrina, hamid bromo - enkapsulasi - mengisi data kegiatan ke tabel laporan
     public void setReportActivities(List<Activity> activities) {
+        // Inisialisasi model tabel jika belum ada
         if (reportTableModel == null) {
             reportTableModel = new DefaultTableModel(
                 new Object[]{"Pilih", "Nama Kegiatan", "Tanggal", "Lokasi", "Status"}, 0) {
@@ -422,6 +456,7 @@ public class DashboardFrame extends JFrame {
             };
         }
 
+        // Reset dan isi ulang tabel laporan
         reportTableModel.setRowCount(0);
         for (Activity activity : activities) {
             reportTableModel.addRow(new Object[]{
@@ -434,11 +469,13 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    // Mengambil daftar baris yang dicentang pada tabel laporan
     //katrina, hamid bromo - enkapsulasi - mengambil baris laporan terpilih
     public List<Integer> getSelectedReportRows() {
         List<Integer> rows = new ArrayList<>();
         if (reportTableModel == null) return rows;
 
+        // Kumpulkan baris yang dicentang (checkbox bernilai true)
         for (int i = 0; i < reportTableModel.getRowCount(); i++) {
             Object selected = reportTableModel.getValueAt(i, 0);
             if (Boolean.TRUE.equals(selected)) rows.add(i);
@@ -446,6 +483,7 @@ public class DashboardFrame extends JFrame {
         return rows;
     }
 
+    // Menambahkan listener untuk tombol ekspor laporan
     //katrina, hamid bromo - enkapsulasi - menambahkan listener ekspor laporan
     public void addReportExportListener(ActionListener l) {
         reportExportListener = l;

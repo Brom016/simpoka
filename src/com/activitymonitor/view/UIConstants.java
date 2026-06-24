@@ -1,45 +1,56 @@
 package com.activitymonitor.view;
 
-//Dibuat oleh: katrina, hamid bromo
+//Dibuat oleh: hamid bromo
+// Digunakan untuk kelas dasar AWT
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 
+// Konstanta UI untuk warna, font, komponen kustom, dan utilitas tombol
 public class UIConstants {
 
+    // Warna primary dan variasinya
     public static final Color PRIMARY       = new Color(0, 150, 136);
     public static final Color PRIMARY_DARK  = new Color(0, 121, 107);
     public static final Color PRIMARY_LIGHT = new Color(224, 242, 241);
+    // Warna latar dan komponen
     public static final Color BG            = new Color(245, 247, 250);
     public static final Color CARD_BG       = Color.WHITE;
     public static final Color BORDER        = new Color(229, 231, 235);
+    // Warna teks
     public static final Color TEXT          = new Color(17,  24,  39);
     public static final Color TEXT_MUTED    = new Color(107, 114, 128);
     public static final Color TEXT_LIGHT    = new Color(156, 163, 175);
 
+    // Warna badge status Direncanakan
     public static final Color BADGE_PLANNED_BG = new Color(219, 234, 254);
     public static final Color BADGE_PLANNED_FG = new Color(29,  78,  216);
+    // Warna badge status Berlangsung
     public static final Color BADGE_ONGOING_BG = new Color(254, 243, 199);
     public static final Color BADGE_ONGOING_FG = new Color(180,  83,   9);
+    // Warna badge status Selesai
     public static final Color BADGE_DONE_BG    = new Color(209, 250, 229);
     public static final Color BADGE_DONE_FG    = new Color(6,   95,  70);
 
+    // Font brand dan judul
     public static final Font F_BRAND    = new Font("Segoe UI", Font.BOLD, 16);
     public static final Font F_TITLE    = new Font("Segoe UI", Font.BOLD, 20);
+    // Font subtitle dan label
     public static final Font F_SUBTITLE = new Font("Segoe UI", Font.PLAIN, 12);
     public static final Font F_LABEL    = new Font("Segoe UI", Font.BOLD, 12);
+    // Font body, small, dan tombol
     public static final Font F_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
     public static final Font F_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
     public static final Font F_BTN      = new Font("Segoe UI", Font.BOLD, 13);
 
 
-    //katrina, hamid bromo - enkapsulasi - membuat label ikon kustom
+    //hamid bromo - enkapsulasi - membuat label ikon kustom
 
     public static JLabel icon(String type, int size, Color color) {
         return new JLabel() {
             @Override
-            //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
+            //hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -48,6 +59,7 @@ public class UIConstants {
                 int p = 2;
                 int s = size - p * 2;
                 g2.translate(p, p);
+                // Gambar ikon sesuai tipe yang diminta
                 switch (type) {
                     case "grid":   drawGrid(g2, s);   break;
                     case "list":   drawList(g2, s);   break;
@@ -69,7 +81,8 @@ public class UIConstants {
         };
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon grid
+    // Menggambar ikon grid (dashboard)
+    //hamid bromo - enkapsulasi - menggambar ikon grid
     private static void drawGrid(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int h = s / 2 - 1;
@@ -79,7 +92,8 @@ public class UIConstants {
         g.drawRoundRect(h + 2, h + 2, h, h, 3, 3);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon list
+    // Menggambar ikon list (daftar)
+    //hamid bromo - enkapsulasi - menggambar ikon list
     private static void drawList(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.fillOval(0, s / 4 - 1, 3, 3);
@@ -90,7 +104,8 @@ public class UIConstants {
         g.drawLine(6, 3 * s / 4, s, 3 * s / 4);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon dokumen
+    // Menggambar ikon dokumen
+    //hamid bromo - enkapsulasi - menggambar ikon dokumen
     private static void drawDoc(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int fold = s / 4;
@@ -104,7 +119,8 @@ public class UIConstants {
         g.drawLine(3, s * 4 / 5, s * 3 / 5, s * 4 / 5);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon logout
+    // Menggambar ikon logout
+    //hamid bromo - enkapsulasi - menggambar ikon logout
     private static void drawLogout(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         // Door frame
@@ -118,7 +134,8 @@ public class UIConstants {
         g.drawLine(s - s / 3, s / 2 + s / 4, s, s / 2);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon search
+    // Menggambar ikon search
+    //hamid bromo - enkapsulasi - menggambar ikon search
     private static void drawSearch(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.8f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int r = s * 3 / 7;
@@ -128,7 +145,8 @@ public class UIConstants {
         g.drawLine(lx, ly, s, s);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon user
+    // Menggambar ikon user
+    //hamid bromo - enkapsulasi - menggambar ikon user
     private static void drawUser(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         int cx = s / 2, cy = s / 3, r = s / 4;
@@ -136,14 +154,16 @@ public class UIConstants {
         g.drawArc(s / 8, s / 2, s * 3 / 4, s * 2 / 3, 0, 180);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon plus
+    // Menggambar ikon plus
+    //hamid bromo - enkapsulasi - menggambar ikon plus
     private static void drawPlus(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.drawLine(s / 2, 2, s / 2, s - 2);
         g.drawLine(2, s / 2, s - 2, s / 2);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon titik tiga
+    // Menggambar ikon titik tiga (menu)
+    //hamid bromo - enkapsulasi - menggambar ikon titik tiga
     private static void drawDots(Graphics2D g, int s) {
         int r = 2, cx = s / 2;
         g.fillOval(cx - r, s / 5 - r, r * 2, r * 2);
@@ -151,7 +171,8 @@ public class UIConstants {
         g.fillOval(cx - r, s * 4 / 5 - r, r * 2, r * 2);
     }
 
-    //katrina, hamid bromo - enkapsulasi - menggambar ikon PDF
+    // Menggambar ikon PDF
+    //hamid bromo - enkapsulasi - menggambar ikon PDF
     private static void drawPdf(Graphics2D g, int s) {
         g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.drawRoundRect(1, 1, s - 2, s - 2, 4, 4);
@@ -163,17 +184,21 @@ public class UIConstants {
     }
 
 
+    // Border kustom dengan sudut membulat
     public static class RoundedBorder extends AbstractBorder {
+        // Radius sudut dan ketebalan border
         private final int radius, thickness;
+        // Warna border
         private final Color color;
 
-        //katrina, hamid bromo - enkapsulasi - method constructorRoundedBorder
+        // Menginisialisasi border dengan radius, warna, dan ketebalan
+        //hamid bromo - enkapsulasi - method constructorRoundedBorder
         public RoundedBorder(int radius, Color color, int thickness) {
             this.radius = radius; this.color = color; this.thickness = thickness;
         }
 
         @Override
-        //katrina, hamid bromo - overriding (polimorfisme) - menggambar border kustom
+        //hamid bromo - overriding (polimorfisme) - menggambar border kustom
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -186,22 +211,25 @@ public class UIConstants {
         }
 
         @Override
-        //katrina, hamid bromo - overriding (polimorfisme) - mengambil ukuran inset border
+        //hamid bromo - overriding (polimorfisme) - mengambil ukuran inset border
         public Insets getBorderInsets(Component c) {
             int i = thickness + 4; return new Insets(i, i, i, i);
         }
     }
 
 
+    // Panel kustom dengan latar sudut membulat dan shadow
     public static class RoundedPanel extends JPanel {
+        // Radius sudut panel
         private final int radius;
-        //katrina, hamid bromo - enkapsulasi - method constructorRoundedPanel
+        // Menginisialisasi panel dengan radius tertentu
+        //hamid bromo - enkapsulasi - method constructorRoundedPanel
         public RoundedPanel(int radius) {
             this.radius = radius; setOpaque(false);
         }
 
         @Override
-        //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
+        //hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -216,10 +244,12 @@ public class UIConstants {
     }
 
 
+    // Label badge status dengan latar membulat dan warna sesuai status
     public static class StatusBadge extends JLabel {
+        // Warna latar badge
         private Color bg = BORDER;
 
-        //katrina, hamid bromo - enkapsulasi - method constructorStatusBadge
+        //hamid bromo - enkapsulasi - method constructorStatusBadge
         public StatusBadge(String status) {
             setStatus(status);
             setHorizontalAlignment(CENTER);
@@ -228,8 +258,10 @@ public class UIConstants {
             setOpaque(false);
         }
 
-        //katrina, hamid bromo - enkapsulasi - mengubah tampilan status badge
+        // Mengubah tampilan badge sesuai status kegiatan
+        //hamid bromo - enkapsulasi - mengubah tampilan status badge
         public void setStatus(String status) {
+            // Atur teks dan warna berdasarkan status
             switch (status != null ? status : "") {
                 case "planned":
                     setText("Direncanakan");
@@ -254,7 +286,7 @@ public class UIConstants {
         }
 
         @Override
-        //katrina, hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
+        //hamid bromo - overriding (polimorfisme) - menggambar komponen kustom
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -267,13 +299,15 @@ public class UIConstants {
     }
 
 
-    //katrina, hamid bromo - enkapsulasi - membuat tombol primary dengan style
+    // Membuat tombol primary dengan warna solid
+    //hamid bromo - enkapsulasi - membuat tombol primary dengan style
 
     public static JButton primaryButton(String text) {
         return styledButton(text, PRIMARY, PRIMARY_DARK, Color.WHITE);
     }
 
-    //katrina, hamid bromo - enkapsulasi - membuat tombol outline dengan style
+    // Membuat tombol outline dengan border
+    //hamid bromo - enkapsulasi - membuat tombol outline dengan style
     public static JButton outlineButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(F_BTN);
@@ -283,15 +317,16 @@ public class UIConstants {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setBorder(new RoundedBorder(6, BORDER, 1));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            //katrina, hamid bromo - interface (abstraksi) - menangani mouse masuk area
+            //hamid bromo - interface (abstraksi) - menangani mouse masuk area
             public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(BG); }
-            //katrina, hamid bromo - interface (abstraksi) - menangani mouse keluar area
+            //hamid bromo - interface (abstraksi) - menangani mouse keluar area
             public void mouseExited(java.awt.event.MouseEvent e)  { btn.setBackground(Color.WHITE); }
         });
         return btn;
     }
 
-    //katrina, hamid bromo - enkapsulasi - membuat tombol dengan style kustom
+    // Membuat tombol dengan warna latar, hover, dan teks kustom
+    //hamid bromo - enkapsulasi - membuat tombol dengan style kustom
     private static JButton styledButton(String text, Color bg, Color hover, Color fg) {
         JButton btn = new JButton(text);
         btn.setFont(F_BTN);
@@ -302,9 +337,9 @@ public class UIConstants {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            //katrina, hamid bromo - interface (abstraksi) - menangani mouse masuk area
+            //hamid bromo - interface (abstraksi) - menangani mouse masuk area
             public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(hover); }
-            //katrina, hamid bromo - interface (abstraksi) - menangani mouse keluar area
+            //hamid bromo - interface (abstraksi) - menangani mouse keluar area
             public void mouseExited(java.awt.event.MouseEvent e)  { btn.setBackground(bg); }
         });
         return btn;

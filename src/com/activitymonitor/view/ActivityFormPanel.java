@@ -1,35 +1,54 @@
 package com.activitymonitor.view;
 
 //Dibuat oleh: katrina, hamid bromo
-import javax.swing.*;
-import javax.swing.border.*;
+// Digunakan untuk komponen UI Swing
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import javax.swing.*;
+import javax.swing.border.*;
 
+// Dialog form untuk menambah atau mengedit kegiatan
 public class ActivityFormPanel extends JDialog {
 
+    // Input nama kegiatan
     private JTextField        nameField;
+    // Input deskripsi kegiatan
     private JTextArea         descArea;
+    // Input tanggal kegiatan
     private JTextField        dateField;
+    // Input lokasi kegiatan
     private JTextField        locationField;
+    // Input jumlah peserta
     private JTextField        participantField;
+    // Combo box status kegiatan
     private JComboBox<String> statusCombo;
+    // Tombol simpan
     private JButton           saveBtn;
+    // Tombol batal
     private JButton           cancelBtn;
+    // Mode edit atau tambah baru
     private final boolean     editMode;
 
+    // Tahun yang dipilih pada date picker
     private int     pickerYear;
+    // Bulan yang dipilih pada date picker
     private int     pickerMonth;
+    // Label bulan pada date picker
     private JLabel  monthLabel;
+    // Grid kalender pada date picker
     private JPanel  calGrid;
+    // Dialog date picker
     private JDialog dateDialog;
 
+    // Kunci status untuk penyimpanan
     private static final String[] STATUS_KEYS   = {"planned","ongoing","completed"};
+    // Label status untuk ditampilkan
     private static final String[] STATUS_LABELS = {"Direncanakan","Berlangsung","Selesai"};
 
+    // Menginisialisasi form dialog dengan parent frame dan mode edit
     //katrina, hamid bromo - enkapsulasi - method constructorActivityFormPanel
     public ActivityFormPanel(Frame parent, boolean editMode) {
         super(parent, true);
@@ -41,6 +60,7 @@ public class ActivityFormPanel extends JDialog {
         setupDialog();
     }
 
+    // Mengatur judul, ukuran, dan posisi dialog
     //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi dialog
     private void setupDialog() {
         setTitle(editMode ? "Edit Kegiatan" : "Tambah Kegiatan");
@@ -49,6 +69,7 @@ public class ActivityFormPanel extends JDialog {
         setResizable(false);
     }
 
+    // Membangun seluruh komponen UI dialog
     //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         JPanel root = new JPanel(new BorderLayout());
@@ -60,6 +81,7 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Membangun panel header dengan judul dan tombol tutup
     //katrina, hamid bromo - enkapsulasi - membangun panel header
 
     private JPanel buildHeader() {
@@ -78,6 +100,7 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Membangun body form dengan field input kegiatan
     //katrina, hamid bromo - enkapsulasi - membangun body form input
 
     private JScrollPane buildFormBody() {
@@ -93,7 +116,7 @@ public class ActivityFormPanel extends JDialog {
         nameField        = styledField("Contoh: Seminar Teknologi");
         descArea         = styledTextArea("Masukkan deskripsi singkat kegiatan");
         dateField        = styledField("YYYY-MM-DD");
-        locationField    = styledField("Gedung Serbaguna");
+        locationField    = styledField("FT.3.01");
         participantField = styledField("0");
         statusCombo      = buildStatusCombo();
 
@@ -124,6 +147,7 @@ public class ActivityFormPanel extends JDialog {
         return scroll;
     }
 
+    // Membangun baris input tanggal dengan tombol kalender
     //katrina, hamid bromo - enkapsulasi - membangun baris input tanggal
     private JPanel buildDateRow() {
         JPanel row = new JPanel(new BorderLayout(6, 0));
@@ -146,6 +170,7 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Membangun panel footer dengan tombol simpan dan batal
     //katrina, hamid bromo - enkapsulasi - membangun panel footer
 
     private JPanel buildFooter() {
@@ -165,9 +190,11 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Menampilkan dialog date picker untuk memilih tanggal
     //katrina, hamid bromo - enkapsulasi - menampilkan dialog pemilih tanggal
 
     private void showDatePicker() {
+        // Jika field tanggal sudah terisi, set date picker ke tanggal tersebut
         if (!dateField.getText().isEmpty()) {
             try {
                 Calendar parsed = Calendar.getInstance();
@@ -187,19 +214,23 @@ public class ActivityFormPanel extends JDialog {
         panel.setBackground(Color.WHITE);
         panel.setBorder(new EmptyBorder(16, 16, 16, 16));
 
-        //nav row
+        // Navigasi bulan sebelumnya dan berikutnya
         JPanel nav = new JPanel(new BorderLayout());
         nav.setBackground(Color.WHITE);
 
         JButton prev = navButton("<");
         JButton next = navButton(">");
+        // Navigasi ke bulan sebelumnya
         prev.addActionListener(e -> {
             pickerMonth--;
+            // Jika bulan < 0, mundur ke tahun sebelumnya
             if (pickerMonth < 0) { pickerMonth = 11; pickerYear--; }
             refreshCalGrid();
         });
+        // Navigasi ke bulan berikutnya
         next.addActionListener(e -> {
             pickerMonth++;
+            // Jika bulan > 11, maju ke tahun berikutnya
             if (pickerMonth > 11) { pickerMonth = 0; pickerYear++; }
             refreshCalGrid();
         });
@@ -216,6 +247,7 @@ public class ActivityFormPanel extends JDialog {
         calGrid = new JPanel(new GridLayout(7, 7, 0, 0));
         calGrid.setBackground(Color.WHITE);
 
+        // Label nama hari (Minggu sampai Sabtu)
         String[] days = {"Min","Sen","Sel","Rab","Kam","Jum","Sab"};
         for (String d : days) {
             JLabel dl = new JLabel(d, SwingConstants.CENTER);
@@ -223,6 +255,7 @@ public class ActivityFormPanel extends JDialog {
             dl.setForeground(UIConstants.TEXT_MUTED);
             calGrid.add(dl);
         }
+        // Placeholder untuk 42 slot (6 baris x 7 kolom)
         for (int i = 0; i < 42; i++) calGrid.add(new JLabel());
 
         refreshCalGrid();
@@ -233,39 +266,40 @@ public class ActivityFormPanel extends JDialog {
         dateDialog.setVisible(true);
     }
 
+    // Membangun ulang grid kalender
     //katrina, hamid bromo - enkapsulasi - memperbarui grid kalender
     private void refreshCalGrid() {
-        //update label bulan
+        // Memperbarui label bulan dan tahun
         Calendar labelCal = Calendar.getInstance();
         labelCal.set(pickerYear, pickerMonth, 1);
         monthLabel.setText(new SimpleDateFormat("MMMM yyyy", new Locale("id", "ID"))
             .format(labelCal.getTime()));
 
-        //hapus 42 slot
+        // Menghapus komponen tanggal lama (sisakan header hari)
         while (calGrid.getComponentCount() > 7) {
             calGrid.remove(calGrid.getComponentCount() - 1);
         }
 
-        // Kalender bulan ini - set ke tanggal 1 agar getActualMaximum akurat
+        // Inisialisasi kalender untuk bulan yang dipilih
         Calendar cal = Calendar.getInstance();
         cal.set(pickerYear, pickerMonth, 1);
 
         int startOffset = cal.get(Calendar.DAY_OF_WEEK) - 1; // 0=Sun
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        //info hari ini
+        // Informasi tanggal hari ini untuk penandaan
         Calendar today = Calendar.getInstance();
         int todayYear  = today.get(Calendar.YEAR);
         int todayMonth = today.get(Calendar.MONTH);
         int todayDay   = today.get(Calendar.DAY_OF_MONTH);
 
-        //sel kosong
+        // Sel kosong sebelum tanggal 1
         for (int i = 0; i < startOffset; i++) {
             JLabel empty = new JLabel();
             calGrid.add(empty);
         }
 
-        //tombol hari
+        // Tombol untuk setiap hari dalam bulan
         for (int d = 1; d <= daysInMonth; d++) {
             final int day = d;
 
@@ -289,15 +323,18 @@ public class ActivityFormPanel extends JDialog {
             btn.setOpaque(false);
             btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+            // Cek apakah tanggal ini adalah hari ini
             boolean isToday = (d == todayDay
                 && pickerMonth == todayMonth
                 && pickerYear  == todayYear);
 
+            // Jika hari ini, beri warna primary
             if (isToday) {
                 btn.setBackground(UIConstants.PRIMARY);
                 btn.setForeground(Color.WHITE);
-                btn.setOpaque(false); // paintComponent handles bg
+                btn.setOpaque(false);
             } else {
+                // Selain hari ini, gunakan warna teks default
                 btn.setBackground(null);
                 btn.setForeground(UIConstants.TEXT);
             }
@@ -336,6 +373,7 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Menambahkan satu baris penuh ke layout form
     //katrina, hamid bromo - enkapsulasi - menambahkan row penuh ke layout
 
     private void fullRow(JPanel p, GridBagConstraints gc,
@@ -350,6 +388,7 @@ public class ActivityFormPanel extends JDialog {
         gc.gridwidth = 1;
     }
 
+    // Menambahkan dua kolom ke layout form (kiri dan kanan)
     //katrina, hamid bromo - enkapsulasi - menambahkan dua kolom ke layout
     private void twoColRow(JPanel p, GridBagConstraints gc, int row,
                             String lLabel, JComponent lField,
@@ -365,6 +404,7 @@ public class ActivityFormPanel extends JDialog {
         p.add(rField, gc);
     }
 
+    // Membuat label form dengan font dan warna standar
     //katrina, hamid bromo - enkapsulasi - membuat label dengan style
     private JLabel mkLabel(String text) {
         JLabel l = new JLabel(text);
@@ -373,6 +413,7 @@ public class ActivityFormPanel extends JDialog {
         return l;
     }
 
+    // Membuat text field dengan placeholder custom
     //katrina, hamid bromo - enkapsulasi - membuat text field dengan placeholder
     private JTextField styledField(String placeholder) {
         JTextField f = new JTextField() {
@@ -399,6 +440,7 @@ public class ActivityFormPanel extends JDialog {
         return f;
     }
 
+    // Membuat text area dengan placeholder custom
     //katrina, hamid bromo - enkapsulasi - membuat text area dengan placeholder
     private JTextArea styledTextArea(String placeholder) {
         JTextArea a = new JTextArea(3, 0) {
@@ -421,6 +463,7 @@ public class ActivityFormPanel extends JDialog {
         return a;
     }
 
+    // Membangun combobox pilihan status kegiatan
     //katrina, hamid bromo - enkapsulasi - membangun combobox status
     private JComboBox<String> buildStatusCombo() {
         JComboBox<String> cb = new JComboBox<>(STATUS_LABELS);
@@ -430,6 +473,7 @@ public class ActivityFormPanel extends JDialog {
         return cb;
     }
 
+    // Membuat tombol tutup (X) pada header
     //katrina, hamid bromo - enkapsulasi - membuat tombol tutup
     private JButton closeButton() {
         JButton btn = new JButton("\u00D7");
@@ -443,6 +487,7 @@ public class ActivityFormPanel extends JDialog {
         return btn;
     }
 
+    // Membuat tombol navigasi bulan (prev/next) pada date picker
     //katrina, hamid bromo - enkapsulasi - membuat tombol navigasi kalender
     private JButton navButton(String text) {
         JButton btn = new JButton(text);
@@ -456,6 +501,7 @@ public class ActivityFormPanel extends JDialog {
     }
 
 
+    // Mengambil nilai dari field input kegiatan
     //katrina, hamid bromo - enkapsulasi - method getActivityName
 
     public String getActivityName()     { return nameField.getText().trim(); }
@@ -470,6 +516,7 @@ public class ActivityFormPanel extends JDialog {
     //katrina, hamid bromo - enkapsulasi - method getStatus
     public String getStatus()           { return STATUS_KEYS[statusCombo.getSelectedIndex()]; }
 
+    // Mengisi nilai ke field input kegiatan
     //katrina, hamid bromo - enkapsulasi - method setActivityName
     public void setActivityName(String v)     { nameField.setText(v); }
     //katrina, hamid bromo - enkapsulasi - method setDescription
@@ -487,17 +534,21 @@ public class ActivityFormPanel extends JDialog {
         }
     }
 
+    // Menambahkan listener untuk tombol simpan
     //katrina, hamid bromo - enkapsulasi - method addSaveListener
     public void addSaveListener(ActionListener l) { saveBtn.addActionListener(l); }
 
+    // Memvalidasi input form sebelum disimpan
     //katrina, hamid bromo - enkapsulasi - memvalidasi input form
     public boolean validateForm() {
+        // Validasi field wajib diisi
         if (getActivityName().isEmpty())    { warn("Nama kegiatan wajib diisi."); return false; }
         if (getDate().isEmpty())             { warn("Tanggal wajib diisi.");        return false; }
         if (getActivityLocation().isEmpty()) { warn("Lokasi wajib diisi.");         return false; }
         return true;
     }
 
+    // Menampilkan dialog peringatan validasi
     //katrina, hamid bromo - enkapsulasi - menampilkan peringatan validasi
     private void warn(String msg) {
         JOptionPane.showMessageDialog(this, msg, "Validasi", JOptionPane.WARNING_MESSAGE);

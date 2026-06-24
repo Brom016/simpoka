@@ -1,23 +1,34 @@
 package com.activitymonitor.model;
 
-//Dibuat oleh: ahmad irfaul, hamid bromo
+//Dibuat oleh: hamid bromo
+// Digunakan untuk merepresentasikan tanggal dalam database
 import java.sql.Date;
 
+// Model untuk entitas kegiatan
 public class Activity {
+    // ID unik kegiatan
     private int    id;
+    // Nama kegiatan
     private String name;
+    // Deskripsi detail kegiatan
     private String description;
+    // Tanggal pelaksanaan kegiatan
     private Date   date;
+    // Lokasi kegiatan
     private String location;
+    // Jumlah peserta kegiatan
     private int    participantCount;
+    // Status kegiatan (planned/ongoing/completed)
     private String status;
+    // ID user yang membuat kegiatan
     private int    createdBy;
+    // ID organisasi tempat kegiatan dibuat
     private int    organizationId;
 
-    //ahmad irfaul, hamid bromo - enkapsulasi - method constructorActivity
+    //hamid bromo - enkapsulasi - method constructorActivity
     public Activity() {}
 
-    //ahmad irfaul, hamid bromo - enkapsulasi - method constructorActivity
+    //hamid bromo - enkapsulasi - method constructorActivity
     public Activity(int id, String name, String description, Date date,
                     String location, int participantCount, String status,
                     int createdBy, int organizationId) {
@@ -32,41 +43,41 @@ public class Activity {
         this.organizationId   = organizationId;
     }
 
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getId
+    //hamid bromo - enkapsulasi - method getId
     public int    getId()               { return id; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getName
+    //hamid bromo - enkapsulasi - method getName
     public String getName()             { return name; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getDescription
+    //hamid bromo - enkapsulasi - method getDescription
     public String getDescription()      { return description; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getDate
+    //hamid bromo - enkapsulasi - method getDate
     public Date   getDate()             { return date; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getLocation
+    //hamid bromo - enkapsulasi - method getLocation
     public String getLocation()         { return location; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getParticipantCount
+    //hamid bromo - enkapsulasi - method getParticipantCount
     public int    getParticipantCount() { return participantCount; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getStatus
+    //hamid bromo - enkapsulasi - method getStatus
     public String getStatus()           { return status; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getCreatedBy
+    //hamid bromo - enkapsulasi - method getCreatedBy
     public int    getCreatedBy()        { return createdBy; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method getOrganizationId
+    //hamid bromo - enkapsulasi - method getOrganizationId
     public int    getOrganizationId()   { return organizationId; }
 
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setId
+    //hamid bromo - enkapsulasi - method setId
     public void setId(int id)                         { this.id               = id; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setName
+    //hamid bromo - enkapsulasi - method setName
     public void setName(String name)                   { this.name             = name; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setDescription
+    //hamid bromo - enkapsulasi - method setDescription
     public void setDescription(String description)     { this.description      = description; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setDate
+    //hamid bromo - enkapsulasi - method setDate
     public void setDate(Date date)                     { this.date             = date; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setLocation
+    //hamid bromo - enkapsulasi - method setLocation
     public void setLocation(String location)           { this.location         = location; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setParticipantCount
+    //hamid bromo - enkapsulasi - method setParticipantCount
     public void setParticipantCount(int count)         { this.participantCount = count; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - mengubah tampilan status badge
+    //hamid bromo - enkapsulasi - mengubah tampilan status badge
     public void setStatus(String status)               { this.status           = status; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setCreatedBy
+    //hamid bromo - enkapsulasi - method setCreatedBy
     public void setCreatedBy(int createdBy)            { this.createdBy        = createdBy; }
-    //ahmad irfaul, hamid bromo - enkapsulasi - method setOrganizationId
+    //hamid bromo - enkapsulasi - method setOrganizationId
     public void setOrganizationId(int organizationId)  { this.organizationId   = organizationId; }
 }

@@ -1,26 +1,34 @@
 package com.activitymonitor.view;
 
 //Dibuat oleh: katrina, hamid bromo
+// Digunakan untuk kelas dasar AWT
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+// Frame login aplikasi
 public class LoginFrame extends JFrame {
 
+    // Input username
     private JTextField     usernameField;
+    // Input password
     private JPasswordField passwordField;
+    // Tombol login
     private JButton        loginButton;
+    // Label pesan error
     private JLabel         errorLabel;
 
+    // Menginisialisasi frame login
     //katrina, hamid bromo - enkapsulasi - method constructorLoginFrame
     public LoginFrame() {
         initComponents();
         setupFrame();
     }
 
+    // Mengatur judul, ukuran, dan posisi frame login
     //katrina, hamid bromo - enkapsulasi - mengatur konfigurasi frame
     private void setupFrame() {
-        setTitle("Activity Monitor - Login");
+        setTitle("SIMPOKA - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(460, 540);
         setLocationRelativeTo(null);
@@ -28,6 +36,7 @@ public class LoginFrame extends JFrame {
         getContentPane().setBackground(UIConstants.BG);
     }
 
+    // Membangun seluruh komponen UI login
     //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new GridBagLayout());
@@ -39,12 +48,12 @@ public class LoginFrame extends JFrame {
         card.setBorder(BorderFactory.createEmptyBorder(42, 44, 36, 44));
         card.setPreferredSize(new Dimension(380, 450));
 
-        JLabel title = new JLabel("Activity Monitor");
+        JLabel title = new JLabel("SIMPOKA");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(UIConstants.PRIMARY);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel subtitle = new JLabel("Sistem Monitoring Kegiatan Organisasi");
+        JLabel subtitle = new JLabel("Sistem Informasi Monitoring Program Kerja Organisasi");
         subtitle.setFont(UIConstants.F_SUBTITLE);
         subtitle.setForeground(UIConstants.TEXT_MUTED);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,6 +107,7 @@ public class LoginFrame extends JFrame {
         toggle.setFocusPainted(false);
         toggle.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         toggle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        // Toggle visibilitas password (tampil/sembunyi)
         toggle.addActionListener(e ->
             passwordField.setEchoChar(
                 passwordField.getEchoChar() == 0 ? '\u2022' : (char) 0));
@@ -119,7 +129,7 @@ public class LoginFrame extends JFrame {
         loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         // Footer
-        JLabel footer = new JLabel("\u00A9 2026 Student Organization Activity Monitor");
+        JLabel footer = new JLabel("\u00A9 SIMPOKA 2026 Kelompok 7");
         footer.setFont(new Font("Segoe UI", Font.PLAIN, 10));
         footer.setForeground(UIConstants.TEXT_LIGHT);
         footer.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -149,6 +159,7 @@ public class LoginFrame extends JFrame {
         add(card);
     }
 
+    // Membangun wrapper panel untuk field input
     //katrina, hamid bromo - enkapsulasi - membangun wrapper field input
     private JPanel buildFieldWrap() {
         JPanel wrap = new JPanel(new BorderLayout(4, 0));
@@ -157,27 +168,35 @@ public class LoginFrame extends JFrame {
         return wrap;
     }
 
+    // Mengambil input dari field login
     //katrina, hamid bromo - enkapsulasi - mengambil input username
     public String getUsername()    { return usernameField.getText().trim(); }
     //katrina, hamid bromo - enkapsulasi - mengambil input password
     public String getPassword()    { return new String(passwordField.getPassword()); }
+    // Menampilkan pesan error pada form login
     //katrina, hamid bromo - enkapsulasi - menampilkan pesan error
     public void showError(String m){ errorLabel.setText(m); }
+    // Membersihkan pesan error
     //katrina, hamid bromo - enkapsulasi - membersihkan pesan error
     public void clearError()       { errorLabel.setText(" "); }
+    // Mengaktifkan atau menonaktifkan tombol login
     //katrina, hamid bromo - enkapsulasi - mengaktifkan/menonaktifkan tombol login
     public void setLoginEnabled(boolean b) {
         loginButton.setEnabled(b);
         loginButton.setText(b ? "Masuk" : "Memproses...");
     }
+    // Menambahkan listener untuk tombol login
     //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol login
     public void addLoginListener(ActionListener l) {
         loginButton.addActionListener(l);
     }
 
+    // Entry point utama aplikasi
     //katrina, hamid bromo - enkapsulasi - entry point utama aplikasi
     public static void main(String[] args) {
+        // Jalankan aplikasi di Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
+            // Set look and feel FlatLaf
             try { UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf"); }
             catch (Exception ignored) {}
             new LoginFrame().setVisible(true);

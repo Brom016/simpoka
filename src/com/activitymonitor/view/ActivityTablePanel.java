@@ -1,40 +1,64 @@
 package com.activitymonitor.view;
 
 //Dibuat oleh: katrina, hamid bromo
+// Digunakan untuk komponen UI Swing
 import javax.swing.*;
+// Digunakan untuk border dan styling komponen
 import javax.swing.border.*;
+// Digunakan untuk komponen tabel
 import javax.swing.table.*;
+// Digunakan untuk kelas dasar AWT
 import java.awt.*;
+// Digunakan untuk event handling
 import java.awt.event.*;
 
+// Panel utama untuk menampilkan tabel kegiatan dengan fitur pencarian, CRUD, dan paginasi
 public class ActivityTablePanel extends JPanel {
 
+    // Field pencarian kegiatan
     private JTextField        searchField;
+    // Tombol tambah kegiatan
     private JButton           addButton;
+    // Tombol edit kegiatan
     private JButton           editButton;
+    // Tombol hapus kegiatan
     private JButton           deleteButton;
+    // Tombol ekspor PDF
     private JButton           exportButton;
+    // Tabel kegiatan
     private JTable            table;
+    // Model tabel untuk data kegiatan
     private DefaultTableModel tableModel;
+    // Label jumlah data ditampilkan
     private JLabel            countLabel;
+    // Tombol paginasi sebelumnya
     private JButton           prevBtn;
+    // Tombol paginasi berikutnya
     private JButton           nextBtn;
+    // Status aktif/tidaknya fitur CRUD
     private boolean           crudEnabled = true;
 
+    // Listener untuk event edit, hapus, dan ubah status
     private ActionListener onEdit, onDelete, onStatusChange;
+    // Array ID kegiatan sesuai urutan baris tabel
     private int[] activityIds = new int[0];
 
+    // Nama kolom tabel
     private static final String[] COLUMNS = {
         "No", "Nama Kegiatan", "Tanggal", "Lokasi", "Peserta", "Status", ""
     };
+    // Kunci status untuk penyimpanan
     private static final String[] STATUS_KEYS = {"planned", "ongoing", "completed"};
+    // Label status untuk ditampilkan
     private static final String[] STATUS_LABELS = {"Direncanakan", "Berlangsung", "Selesai"};
 
+    // Menginisialisasi panel tabel kegiatan
     //katrina, hamid bromo - enkapsulasi - method constructorActivityTablePanel
     public ActivityTablePanel() {
         initComponents();
     }
 
+    // Membangun seluruh komponen panel
     //katrina, hamid bromo - enkapsulasi - inisialisasi komponen UI
     private void initComponents() {
         setLayout(new BorderLayout(0, 12));
@@ -46,13 +70,14 @@ public class ActivityTablePanel extends JPanel {
     }
 
 
+    // Membangun toolbar dengan field pencarian dan tombol aksi
     //katrina, hamid bromo - enkapsulasi - membangun toolbar aksi
 
     private JPanel buildToolbar() {
         JPanel bar = new JPanel(new BorderLayout(10, 0));
         bar.setOpaque(false);
 
-        //search field
+        // Panel pembungkus field pencarian dengan ikon
         JPanel searchWrap = new JPanel(new BorderLayout(4, 0));
         searchWrap.setBackground(Color.WHITE);
         searchWrap.setBorder(new UIConstants.RoundedBorder(6, UIConstants.BORDER, 1));
@@ -89,6 +114,7 @@ public class ActivityTablePanel extends JPanel {
     }
 
 
+    // Membangun card panel yang berisi tabel kegiatan
     //katrina, hamid bromo - enkapsulasi - membangun card tabel
 
     private UIConstants.RoundedPanel buildTableCard() {
@@ -96,6 +122,7 @@ public class ActivityTablePanel extends JPanel {
         card.setBackground(Color.WHITE);
         card.setLayout(new BorderLayout());
 
+        // Hanya kolom aksi (index 6) yang dapat diedit
         tableModel = new DefaultTableModel(COLUMNS, 0) {
             @Override public boolean isCellEditable(int r, int c) { return c == 6; }
         };
@@ -112,7 +139,7 @@ public class ActivityTablePanel extends JPanel {
         table.setBackground(Color.WHITE);
         table.setIntercellSpacing(new Dimension(0, 0));
 
-        //header
+        // Konfigurasi header tabel
         JTableHeader header = table.getTableHeader();
         header.setFont(UIConstants.F_LABEL);
         header.setBackground(new Color(249, 250, 251));
@@ -121,7 +148,7 @@ public class ActivityTablePanel extends JPanel {
         header.setPreferredSize(new Dimension(0, 42));
         header.setReorderingAllowed(false);
 
-        // Column widths
+        // Lebar setiap kolom tabel
         int[] widths = {44, 260, 110, 160, 70, 130, 46};
         for (int i = 0; i < widths.length; i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
@@ -129,7 +156,7 @@ public class ActivityTablePanel extends JPanel {
         table.getColumnModel().getColumn(0).setMaxWidth(50);
         table.getColumnModel().getColumn(6).setMaxWidth(50);
 
-        //no renderer center gray
+        // Render kolom nomor dengan teks tengah dan warna abu
         table.getColumnModel().getColumn(0).setCellRenderer(
             new DefaultTableCellRenderer() {
                 @Override
@@ -147,7 +174,7 @@ public class ActivityTablePanel extends JPanel {
                 }
             });
 
-        //peserta renderer
+        // Render kolom peserta dengan teks tengah
         DefaultTableCellRenderer centerR = new DefaultTableCellRenderer();
         centerR.setHorizontalAlignment(SwingConstants.CENTER);
         table.getColumnModel().getColumn(4).setCellRenderer(centerR);
@@ -220,6 +247,7 @@ public class ActivityTablePanel extends JPanel {
         return card;
     }
 
+    // Menampilkan menu popup aksi (edit, ubah status, hapus)
     //katrina, hamid bromo - enkapsulasi - menampilkan menu popup aksi
     private void showMenu(Component invoker, int row) {
         if (!crudEnabled) return;
@@ -256,6 +284,7 @@ public class ActivityTablePanel extends JPanel {
     }
 
 
+    // Membangun panel footer dengan info jumlah data dan tombol paginasi
     //katrina, hamid bromo - enkapsulasi - membangun panel footer
 
     private JPanel buildFooter() {
@@ -285,12 +314,15 @@ public class ActivityTablePanel extends JPanel {
     }
 
 
+    // Mengisi data kegiatan ke dalam tabel beserta ID
     //katrina, hamid bromo - enkapsulasi - mengisi data ke tabel
 
     public void setTableData(Object[][] data, int[] ids) {
+        // Reset tabel dan isi ulang dengan data baru
         tableModel.setRowCount(0);
         activityIds = ids != null ? ids : new int[0];
         int no = 1;
+        // Iterasi setiap baris data dan tambahkan ke tabel
         for (Object[] row : data) {
             Object[] r = new Object[COLUMNS.length];
             r[0] = no++;
@@ -298,27 +330,36 @@ public class ActivityTablePanel extends JPanel {
             r[COLUMNS.length - 1] = "";
             tableModel.addRow(r);
         }
+        // Perbarui label jumlah data
         countLabel.setText("Menampilkan " + data.length + " dari " + data.length + " data");
     }
 
+    // Mengisi data ke tabel tanpa ID
     //katrina, hamid bromo - enkapsulasi - mengisi data ke tabel
     public void setTableData(Object[][] data) {
         setTableData(data, new int[data.length]);
     }
 
+    // Membersihkan seluruh data tabel
     //katrina, hamid bromo - enkapsulasi - membersihkan tabel
     public void clearTable()               { tableModel.setRowCount(0); }
+    // Mendapatkan baris yang dipilih
     //katrina, hamid bromo - enkapsulasi - mengambil baris terpilih
     public int    getSelectedRow()         { return table.getSelectedRow(); }
+    // Mendapatkan nilai cell pada baris dan kolom tertentu
     //katrina, hamid bromo - enkapsulasi - mengambil nilai cell tertentu
     public Object getValueAt(int r, int c) { return tableModel.getValueAt(r, c); }
+    // Mendapatkan kata kunci pencarian
     //katrina, hamid bromo - enkapsulasi - mengambil kata kunci pencarian
     public String getSearchKeyword()       { return searchField.getText().trim(); }
+    // Mendapatkan ID kegiatan dari baris tertentu
     //katrina, hamid bromo - enkapsulasi - mengambil ID kegiatan dari baris
     public int    getActivityId(int row)   { 
+        // Validasi index baris, kembalikan -1 jika tidak valid
         return row >= 0 && row < activityIds.length ? activityIds[row] : -1; 
     }
 
+    // Menampilkan dialog untuk mengubah status kegiatan
     //katrina, hamid bromo - enkapsulasi - menampilkan dialog ubah status
     private void showStatusDialog(int row) {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
@@ -340,6 +381,7 @@ public class ActivityTablePanel extends JPanel {
         statusCombo.setBackground(Color.WHITE);
         statusCombo.setPreferredSize(new Dimension(0, 36));
 
+        // Set status combo sesuai status saat ini
         String currentStatus = (String) tableModel.getValueAt(row, 5);
         for (int i = 0; i < STATUS_LABELS.length; i++) {
             if (STATUS_LABELS[i].equals(currentStatus)) {
@@ -351,6 +393,7 @@ public class ActivityTablePanel extends JPanel {
         JButton saveBtn = UIConstants.primaryButton("Simpan");
         JButton cancelBtn = UIConstants.outlineButton("Batal");
 
+        // Simpan status baru dan trigger listener
         saveBtn.addActionListener(e -> {
             int idx = statusCombo.getSelectedIndex();
             String newStatus = idx >= 0 ? STATUS_KEYS[idx] : "planned";
@@ -379,6 +422,7 @@ public class ActivityTablePanel extends JPanel {
         dialog.setVisible(true);
     }
 
+    // Menambahkan listener untuk event pencarian
     //katrina, hamid bromo - enkapsulasi - menambahkan listener pencarian
     public void addSearchListener(ActionListener l) {
         searchField.addActionListener(l);
@@ -387,30 +431,37 @@ public class ActivityTablePanel extends JPanel {
             public void keyReleased(KeyEvent e) { l.actionPerformed(null); }
         });
     }
+    // Menambahkan listener untuk tombol tambah kegiatan
     //katrina, hamid bromo - enkapsulasi - menambahkan listener tambah kegiatan
     public void addAddListener(ActionListener l)    { addButton.addActionListener(l); }
+    // Menambahkan listener untuk tombol edit kegiatan
     //katrina, hamid bromo - enkapsulasi - menambahkan listener edit kegiatan
     public void addEditListener(ActionListener l) {
         this.onEdit = l;
         editButton.addActionListener(l);
     }
+    // Menambahkan listener untuk tombol hapus kegiatan
     //katrina, hamid bromo - enkapsulasi - menambahkan listener hapus kegiatan
     public void addDeleteListener(ActionListener l) {
         this.onDelete = l;
         deleteButton.addActionListener(l);
     }
+    // Menambahkan listener untuk perubahan status
     //katrina, hamid bromo - enkapsulasi - menambahkan listener ubah status
     public void addStatusChangeListener(ActionListener l) {
         this.onStatusChange = l;
     }
+    // Menambahkan listener untuk tombol ekspor PDF
     //katrina, hamid bromo - enkapsulasi - menambahkan listener tombol ekspor
     public void addExportListener(ActionListener l) { exportButton.addActionListener(l); }
+    // Menambahkan listener untuk seleksi baris tabel
     //katrina, hamid bromo - enkapsulasi - menambahkan listener seleksi tabel
     public void addTableSelectionListener(
             javax.swing.event.ListSelectionListener l) {
         table.getSelectionModel().addListSelectionListener(l);
     }
 
+    // Mengaktifkan atau menonaktifkan fitur CRUD
     //katrina, hamid bromo - enkapsulasi - mengaktifkan/menonaktifkan tombol CRUD
     public void setCrudEnabled(boolean enabled) {
         crudEnabled = enabled;

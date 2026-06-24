@@ -1,17 +1,19 @@
 package com.activitymonitor.dao;
 
 //Dibuat oleh: muhamad rifki, hamid bromo
+// Digunakan untuk mengimpor model User
 import com.activitymonitor.model.User;
 import com.activitymonitor.util.DBConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Kelas DAO untuk mengelola data pengguna di database
 public class UserDAO {
 
     // Authenticate login - returns User if valid, null if not
     //muhamad rifki, hamid bromo - enkapsulasi - memverifikasi kredensial login user
+    // Memverifikasi kredensial login, mengembalikan User jika valid
     public User authenticate(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement stmt = DBConnection.getConnection()
@@ -19,6 +21,7 @@ public class UserDAO {
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
+            // Jika username dan password cocok, mapping ke objek User
             if (rs.next()) {
                 return mapRow(rs);
             }
@@ -29,11 +32,13 @@ public class UserDAO {
     }
 
     //muhamad rifki, hamid bromo - enkapsulasi - mengambil semua data dari database
+    // Mengambil semua data pengguna, diurutkan berdasarkan nama
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY full_name ASC";
         try (Statement stmt = DBConnection.getConnection().createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
+            // Memetakan setiap baris hasil query ke objek User
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
             System.err.println("UserDAO.findAll: " + e.getMessage());
@@ -42,11 +47,13 @@ public class UserDAO {
     }
 
     //muhamad rifki, hamid bromo - enkapsulasi - menyimpan data baru ke database
+    // Menyimpan data pengguna baru ke database
     public boolean insert(User user) {
         String sql = "INSERT INTO users (full_name, username, password, role, organization_id) "
                    + "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = DBConnection.getConnection()
                 .prepareStatement(sql)) {
+            // Mengisi parameter query dengan data user
             stmt.setString(1, user.getFullName());
             stmt.setString(2, user.getUsername());
             stmt.setString(3, user.getPassword());
@@ -60,6 +67,7 @@ public class UserDAO {
     }
 
     //muhamad rifki, hamid bromo - enkapsulasi - memetakan baris database ke objek
+    // Memetakan satu baris ResultSet ke objek User
     private User mapRow(ResultSet rs) throws SQLException {
         return new User(
             rs.getInt("id"),

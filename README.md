@@ -1,6 +1,6 @@
 # SIMPOKA - Activity Monitor Application
 
-SIMPOKA (Sistem Informasi Pengawasan Kegiatan) is a comprehensive Java Swing desktop application for monitoring and managing activities across organizations.
+SIMPOKA (Sistem Informasi Monitoring Program Kerja Organisasi atau UKM) is a comprehensive Java Swing desktop application for monitoring and managing activities across organizations.
 
 ## Project Overview
 
